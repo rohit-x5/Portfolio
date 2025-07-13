@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Rohit's Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Inter:wght@300;400;500;600&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="assets/fevicon.png" type="image/png" />
+    <script type="module">
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyB8U1P8swKpFe5KUCby-CLSudOsAag_V04",
+            authDomain: "rohit-portfolio-f061b.firebaseapp.com",
+            databaseURL: "https://rohit-portfolio-f061b-default-rtdb.firebaseio.com", // Realtime Database URL
+            projectId: "rohit-portfolio-f061b",
+            storageBucket: "rohit-portfolio-f061b.firebasestorage.app",
+            messagingSenderId: "205796027031",
+            appId: "1:205796027031:web:2740bb9c8fd65c837657d2",
+            measurementId: "G-D722TTQJSD"
+        };
+
+        // Import and Initialize Firebase services using modular syntax
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, EmailAuthProvider, reauthenticateWithCredential, updatePassword, signOut } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+        import { getDatabase, ref, remove, onValue, query, orderByChild, startAt, endAt, get, update } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"; // Realtime Database imports
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const database = getDatabase(app); // Get Realtime Database service
+
+        console.log("APP INIT: Firebase app, auth, and Realtime Database initialized in admin-panel.html.");
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('current-year').textContent = new Date().getFullYear();
+            console.log("DOM LOADED: Document content fully loaded.");
+
+            // Admin Menu Toggle Logic (similar to index.html)
+            const adminMenuIcon = document.querySelector('.admin-menu-icon-dots');
+            const adminDropdownMenu = document.querySelector('.admin-dropdown-menu');
+
+            if (adminMenuIcon && adminDropdownMenu) {
+                adminMenuIcon.addEventListener('click', function() {
+                    adminDropdownMenu.classList.toggle('active');
+                });
+
+                document.addEventListener('click', function(event) {
+                    // Close dropdown if click is outside menu icon and dropdown itself
+                    if (!adminDropdownMenu.contains(event.target) && !adminMenuIcon.contains(event.target)) {
+                        adminDropdownMenu.classList.remove('active');
+                    }
+                });
+            }
+
+            // Authentication Guard: Check if user is logged in
+            onAuthStateChanged(auth, (user) => {
+                if (!user) {
+                    console.log("AUTH STATE: No user logged in. Redirecting to admin.html.");
+                    console.log('You are not logged in. Redirecting to login page.');
+                    window.location.href = 'admin.html';
+                } else {
+                    console.log("AUTH STATE: Admin user logged in:", user.email);
+                    setupLogout();
+                    setupPasswordChange();
+                    setupMessageFiltering(); // This will call loadDashboardData initially
+                    setupClearOldMessages();
+                    setupResetAnalyticsData();
+                    setupDownloadFilteredCsv();
+                }
+            });
+
+            function setupLogout() {
+                const logoutButton = document.getElementById('logoutButton');
+                if (!logoutButton) { console.error("INIT ERROR: Logout button not found!"); return; }
+                logoutButton.addEventListener('click', async () => {
+                    console.log('User initiated logout. Proceeding with logout.'); 
+                    try {
+                        await signOut(auth);
+                        console.log('Logged out successfully!');
+                        window.location.href = 'admin.html';
+                    } catch (error) {
+                        console.error("LOGOUT ERROR:", error);
+                        console.error("Error logging out. Please try again.");
+                    }
+                });
+            }
+
+            // Function to load and display dashboard data (messages and analytics from Realtime DB)
+            async function loadDashboardData(filter = 'all', startDate = null, endDate = null) {
+                console.log(`DATA LOAD: loadDashboardData called with filter: ${filter}, Start: ${startDate}, End: ${endDate}`);
+
+                const messagesTableBody = document.getElementById('messagesTableBody');
+                const totalMessagesCount = document.getElementById('totalMessagesCount');
+                const newMessagesToday = document.getElementById('newMessagesToday');
+                const uniqueVisitorsCount = document.getElementById('uniqueVisitorsCount');
+                const totalPageViews = document.getElementById('totalPageViews');
+
+                if (!messagesTableBody || !totalMessagesCount || !newMessagesToday || !uniqueVisitorsCount || !totalPageViews) {
+                    console.error("INIT ERROR: One or more dashboard elements not found!");
+                    return;
+                }
+                
+                messagesTableBody.innerHTML = `<tr><td colspan="6" style="text-align: center; padding: 20px;">Loading messages...</td></tr>`;
+                console.log("DATA LOAD: Table body cleared and loading message set.");
+
+                // --- Fetch Messages from Realtime Database ---
+                let messagesRef = ref(database, 'messages');
+                let messagesRealtimeQuery;
+
+                const { startTimestamp, endTimestamp } = getFilterTimestamps(filter, startDate, endDate);
+                console.log(`DATA LOAD: Calculated timestamps for Realtime DB: Start=${startTimestamp}, End=${endTimestamp}`);
+
+                if (startTimestamp && endTimestamp) {
+                    messagesRealtimeQuery = query(messagesRef, orderByChild('timestamp'), startAt(startTimestamp), endAt(endTimestamp));
+                    console.log("DATA LOAD: Applying timestamp filter to Realtime DB messages query.");
+                } else {
+                    messagesRealtimeQuery = query(messagesRef, orderByChild('timestamp')); // For 'all' or if dates are invalid
+                    console.log("DATA LOAD: Applying only order by timestamp to Realtime DB messages query (no date filter).");
+                }
+
+                // Use onValue for real-time updates for messages
+                onValue(messagesRealtimeQuery, (snapshot) => {
+                    console.log("DATA FETCH: onValue callback triggered for Realtime DB messages.");
+                    messagesTableBody.innerHTML = ''; // Clear table before populating
+                    const messages = [];
+                    let todayMessagesCounter = 0;
+                    const now = new Date();
+                    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0).getTime();
+
+                    if (snapshot.exists()) {
+                        console.log(`DATA FETCH: Realtime DB messages snapshot exists. Number of children: ${snapshot.size}`);
+                        if (snapshot.size === 0) {
+                            console.log("DATA FETCH: Snapshot exists but has 0 children. Displaying 'No messages found for this filter.'");
+                            const row = messagesTableBody.insertRow();
+                            const cell = row.insertCell(0);
+                            cell.colSpan = 6;
+                            cell.textContent = 'No messages found for this filter.';
+                            cell.style.textAlign = 'center';
+                            cell.style.padding = '20px';
+                        } else {
+                            snapshot.forEach((childSnapshot) => {
+                                const messageData = childSnapshot.val();
+                                messages.push({
+                                    id: childSnapshot.key, // Get the key (ID) from Realtime DB
+                                    ...messageData
+                                });
+                                if (messageData.timestamp >= todayStart && messageData.timestamp <= now.getTime()) {
+                                    todayMessagesCounter++;
+                                }
+                            });
+
+                            messages.sort((a, b) => b.timestamp - a.timestamp); // Sort descending (orderByChild provides ordered snapshot, but client-side sort for safety)
+
+                            console.log(`DATA FETCH: Populating table with ${messages.length} messages.`);
+                            messages.forEach(msg => {
+                                const row = messagesTableBody.insertRow();
+                                row.insertCell(0).textContent = new Date(msg.timestamp).toLocaleString();
+                                row.insertCell(1).textContent = msg.name;
+                                row.insertCell(2).textContent = msg.email;
+                                row.insertCell(3).textContent = msg.phone || 'N/A';
+                                const messageCell = row.insertCell(4);
+                                messageCell.textContent = msg.message.substring(0, 50) + (msg.message.length > 50 ? '...' : '');
+
+                                const actionsCell = row.insertCell(5);
+                                const viewBtn = document.createElement('button');
+                                viewBtn.textContent = 'View';
+                                viewBtn.classList.add('action-btn', 'table-action', 'view-btn');
+                                viewBtn.onclick = () => {
+                                    console.log(`Message from ${msg.name}:\n\n${msg.message}\n\nEmail: ${msg.email}\nPhone: ${msg.phone || 'N/A'}\nSubject: ${msg.subject || 'N/A'}`);
+                                };
+                                actionsCell.appendChild(viewBtn);
+
+                                const deleteBtn = document.createElement('button');
+                                deleteBtn.textContent = 'Delete';
+                                deleteBtn.classList.add('action-btn', 'table-action', 'danger-action');
+                                deleteBtn.style.marginLeft = '5px';
+                                deleteBtn.onclick = async () => {
+                                    console.log(`User initiated delete for message from ${msg.name}. Proceeding with deletion.`);
+                                    try {
+                                        await remove(ref(database, 'messages/' + msg.id)); // Delete from Realtime DB
+                                        console.log('Message deleted successfully from Realtime Database.');
+                                    } catch (error) {
+                                        console.error("DELETE ERROR (Realtime DB):", error);
+                                        console.error('Failed to delete message. Please try again.');
+                                    }
+                                };
+                                actionsCell.appendChild(deleteBtn);
+                            });
+                        }
+                    } else {
+                        const row = messagesTableBody.insertRow();
+                        const cell = row.insertCell(0);
+                        cell.colSpan = 6;
+                        cell.textContent = 'No messages found in the database.';
+                        cell.style.textAlign = 'center';
+                        cell.style.padding = '20px';
+                        console.log("DATA FETCH: Realtime DB messages snapshot does not exist (no 'messages' node or empty).");
+                    }
+
+                    totalMessagesCount.textContent = snapshot.size;
+                    newMessagesToday.textContent = todayMessagesCounter;
+                    console.log(`METRICS UPDATE: Total Messages=${snapshot.size}, New Today=${todayMessagesCounter}`);
+
+                }, (error) => {
+                    console.error("DATA FETCH ERROR: Error fetching Realtime DB messages:", error);
+                    messagesTableBody.innerHTML = `<tr><td colspan="6" style="color:var(--danger-color); text-align:center; padding: 20px;">Error loading messages: ${error.message}</td></tr>`;
+                    totalMessagesCount.textContent = 'Error';
+                    newMessagesToday.textContent = 'Error';
+                    console.log("DATA FETCH ERROR: Error during Realtime DB messages onValue callback.");
+                });
+
+                // --- Fetch Visitor Analytics from Realtime Database ---
+                const pageViewsRef = ref(database, 'userTracking/pageViews'); // Corrected path
+                const uniqueVisitorsRef = ref(database, 'userTracking/uniqueVisitors'); // Corrected path
+
+                onValue(pageViewsRef, (snapshot) => {
+                    const views = snapshot.val() || 0;
+                    totalPageViews.textContent = views;
+                    console.log(`ANALYTICS: Page Views updated: ${views}`);
+                }, (error) => {
+                    console.error("ANALYTICS ERROR: Error fetching page views:", error);
+                    totalPageViews.textContent = 'Error';
+                });
+
+                onValue(uniqueVisitorsRef, (snapshot) => {
+                    const visitors = snapshot.val() || 0;
+                    uniqueVisitorsCount.textContent = visitors;
+                    console.log(`ANALYTICS: Unique Visitors updated: ${visitors}`);
+                }, (error) => {
+                    console.error("ANALYTICS ERROR: Error fetching unique visitors:", error);
+                    uniqueVisitorsCount.textContent = 'Error';
+                });
+            } // End of loadDashboardData
+
+            // Helper function to get timestamps based on filter
+            function getFilterTimestamps(filter, startDate, endDate) {
+                let startTimestamp = null;
+                let endTimestamp = null;
+                const now = new Date();
+
+                if (filter === 'today') {
+                    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
+                    startTimestamp = today.getTime();
+                    endTimestamp = now.getTime();
+                } else if (filter === 'last7days') {
+                    startTimestamp = now.getTime() - (7 * 24 * 60 * 60 * 1000);
+                    endTimestamp = now.getTime();
+                } else if (filter === 'last30days') {
+                    startTimestamp = now.getTime() - (30 * 24 * 60 * 60 * 1000);
+                    endTimestamp = now.getTime();
+                } else if (filter === 'custom' && startDate && endDate) {
+                    startTimestamp = new Date(startDate).getTime();
+                    const end = new Date(endDate);
+                    end.setHours(23, 59, 59, 999); // End of the selected day
+                    endTimestamp = end.getTime();
+                }
+                return { startTimestamp, endTimestamp };
+            }
+
+            // Function for handling password change
+            function setupPasswordChange() {
+                const changePasswordForm = document.getElementById('changePasswordForm');
+                const passwordMessage = document.getElementById('password-message');
+
+                if (!changePasswordForm || !passwordMessage) {
+                    console.error("INIT ERROR: Password change elements not found.");
+                    return;
+                }
+
+                changePasswordForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    passwordMessage.textContent = '';
+                    passwordMessage.classList.remove('success', 'error');
+
+                    const currentPassword = document.getElementById('currentPassword').value;
+                    const newPassword = document.getElementById('newPassword').value;
+                    const confirmNewPassword = document.getElementById('confirmNewPassword').value;
+
+                    if (newPassword !== confirmNewPassword) {
+                        passwordMessage.textContent = 'New passwords do not match.';
+                        passwordMessage.classList.add('error');
+                        return;
+                    }
+                    if (newPassword.length < 6) {
+                        passwordMessage.textContent = 'New password must be at least 6 characters long.';
+                        passwordMessage.classList.add('error');
+                        return;
+                    }
+
+                    const user = auth.currentUser;
+                    if (user) {
+                        try {
+                            const credential = EmailAuthProvider.credential(user.email, currentPassword);
+                            await reauthenticateWithCredential(user, credential);
+                            await updatePassword(user, newPassword);
+
+                            passwordMessage.textContent = 'Password updated successfully!';
+                            passwordMessage.classList.add('success');
+                            changePasswordForm.reset();
+                        } catch (error) {
+                            console.error("PASSWORD CHANGE ERROR:", error);
+                            let errorMessage = 'Failed to update password. Please try again.';
+                            if (error.code === 'auth/wrong-password') {
+                                errorMessage = 'Current password is incorrect.';
+                            } else if (error.code === 'auth/requires-recent-login') {
+                                errorMessage = 'For security, please log out and log in again to change your password.';
+                            } else if (error.code === 'auth/invalid-email') {
+                                errorMessage = 'Invalid email address provided.';
+                            }
+                            passwordMessage.textContent = errorMessage;
+                            passwordMessage.classList.add('error');
+                        }
+                    } else {
+                        passwordMessage.textContent = 'No user is logged in.';
+                        passwordMessage.classList.add('error');
+                    }
+                });
+            } // End of setupPasswordChange
+
+            // Function for message filtering logic
+            function setupMessageFiltering() {
+                const messageFilter = document.getElementById('message-filter');
+                const customDateRangeDiv = document.getElementById('custom-date-range');
+                const startDateInput = document.getElementById('startDate');
+                const endDateInput = document.getElementById('endDate');
+                const applyFilterBtn = document.getElementById('applyFilterBtn');
+
+                if (!messageFilter || !customDateRangeDiv || !startDateInput || !endDateInput || !applyFilterBtn) {
+                    console.error("INIT ERROR: Message filtering elements not found. Check HTML IDs.");
+                    return;
+                }
+
+                messageFilter.addEventListener('change', () => {
+                    const selectedFilter = messageFilter.value;
+                    if (selectedFilter === 'custom') {
+                        customDateRangeDiv.style.display = 'flex';
+                    } else {
+                        customDateRangeDiv.style.display = 'none';
+                        loadDashboardData(selectedFilter);
+                    }
+                });
+
+                applyFilterBtn.addEventListener('click', () => {
+                    const startDate = startDateInput.value;
+                    const endDate = endDateInput.value;
+                    if (startDate && endDate) {
+                        loadDashboardData('custom', startDate, endDate);
+                    } else {
+                        console.log('Please select both start and end dates for custom filter.');
+                    }
+                });
+                
+                // Initial load with default filter (from select box)
+                loadDashboardData(messageFilter.value);
+            } // End of setupMessageFiltering
+
+            // Function to clear old messages from Realtime Database
+            function setupClearOldMessages() {
+                const clearOldMessagesBtn = document.getElementById('clearOldMessagesBtn');
+                if (!clearOldMessagesBtn) {
+                    console.error("INIT ERROR: Clear Old Messages button not found.");
+                    return;
+                }
+
+                clearOldMessagesBtn.addEventListener('click', async () => {
+                    console.log('User initiated clearing of old messages. Proceeding with deletion.');
+                    try {
+                        const thirtyDaysAgo = Date.now() - (30 * 24 * 60 * 60 * 1000);
+                        const messagesToDeleteQuery = query(ref(database, 'messages'), orderByChild('timestamp'), endAt(thirtyDaysAgo));
+                        const snapshot = await get(messagesToDeleteQuery);
+
+                        if (snapshot.exists()) {
+                            let deleteCount = 0;
+                            const updates = {};
+                            snapshot.forEach(child => {
+                                updates[`messages/${child.key}`] = null; // Set to null to delete
+                                deleteCount++;
+                            });
+
+                            await update(ref(database, '/'), updates); // Apply all deletions in one update
+                            console.log(`${deleteCount} old messages deleted successfully from Realtime Database.`);
+                        } else {
+                            console.log('No messages older than 30 days found to clear in Realtime Database.');
+                        }
+                    } catch (error) {
+                        console.error("CLEAR MESSAGES ERROR (Realtime DB):", error);
+                        console.error("Failed to clear old messages. Please check console for details.");
+                    }
+                });
+            } // End of setupClearOldMessages
+
+            // Function to reset all analytics data in Realtime Database
+            function setupResetAnalyticsData() {
+                const resetAnalyticsDataBtn = document.getElementById('resetAnalyticsDataBtn');
+                if (!resetAnalyticsDataBtn) {
+                    console.error("INIT ERROR: Reset Analytics Data button not found.");
+                    return;
+                }
+
+                resetAnalyticsDataBtn.addEventListener('click', async () => {
+                    console.log('User initiated resetting analytics data. Proceeding with reset.');
+                    try {
+                        await remove(ref(database, 'userTracking')); // Remove the entire userTracking node
+                        console.log('All analytics data reset successfully in Realtime Database.');
+                    } catch (error) {
+                        console.error("RESET ANALYTICS ERROR (Realtime DB):", error);
+                        console.error("Failed to reset analytics data. Please check console for details.");
+                    }
+                });
+            } // End of setupResetAnalyticsData
+
+            // Function to handle Download Filtered Messages CSV from Realtime Database
+            function setupDownloadFilteredCsv() {
+                const downloadCsvBtn = document.getElementById('downloadCsvBtn');
+                const messageFilter = document.getElementById('message-filter');
+                const startDateInput = document.getElementById('startDate');
+                const endDateInput = document.getElementById('endDate');
+
+                if (!downloadCsvBtn || !messageFilter || !startDateInput || !endDateInput) {
+                    console.error("INIT ERROR: Download CSV elements not found.");
+                    return;
+                }
+
+                downloadCsvBtn.addEventListener('click', async () => {
+                    const currentFilter = messageFilter.value;
+                    const startDate = startDateInput.value;
+                    const endDate = endDateInput.value;
+
+                    const { startTimestamp, endTimestamp } = getFilterTimestamps(currentFilter, startDate, endDate);
+
+                    let messagesRef = ref(database, 'messages');
+                    let filteredMessagesRealtimeQuery;
+
+                    if (startTimestamp && endTimestamp) {
+                        filteredMessagesRealtimeQuery = query(messagesRef, orderByChild('timestamp'), startAt(startTimestamp), endAt(endTimestamp));
+                    } else {
+                        filteredMessagesRealtimeQuery = query(messagesRef, orderByChild('timestamp'));
+                    }
+
+                    try {
+                        const snapshot = await get(filteredMessagesRealtimeQuery);
+                        const allMessages = [];
+                        snapshot.forEach((childSnapshot) => {
+                            allMessages.push(childSnapshot.val());
+                        });
+
+                        if (allMessages.length === 0) {
+                            console.log('No messages found for the current filter to download.');
+                            return;
+                        }
+
+                        let csvContent = "Timestamp,Name,Email,Phone,Subject,Message\n";
+                        const escapeCsv = (str) => {
+                            if (str === null || str === undefined) return '';
+                            str = String(str);
+                            if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+                                return `"${str.replace(/"/g, '""')}"`;
+                            }
+                            return str;
+                        };
+
+                        allMessages.forEach(msg => {
+                           const timestamp = escapeCsv(new Date(msg.timestamp).toLocaleString());
+                            const name = escapeCsv(msg.name);
+                            const email = escapeCsv(msg.email);
+                            const phone = escapeCsv(msg.phone || 'N/A');
+                            const subject = escapeCsv(msg.subject || 'N/A');
+                            const message = escapeCsv(msg.message);
+                            csvContent += `${timestamp},${name},${email},${phone},${subject},${message}\n`;
+                        });
+
+                        const encodedUri = encodeURI("data:text/csv;charset=utf-8," + csvContent);
+                        const link = document.createElement("a");
+                        link.setAttribute("href", encodedUri);
+                        link.setAttribute("download", "filtered_contact_messages.csv");
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+
+                        console.log("Filtered messages downloaded successfully as filtered_contact_messages.csv.");
+                    } catch (error) {
+                        console.error("DOWNLOAD CSV ERROR (Realtime DB): Error generating filtered CSV:", error);
+                        console.error("Failed to download filtered CSV. Please check console for details.");
+                    }
+                });
+            } // End of setupDownloadFilteredCsv
+
+        }); // End of DOMContentLoaded
+    </script>
+</head>
+<body>
+    <header class="admin-main-header">
+        <div class="header-content-wrapper">
+            <h1 class="admin-header-title">Admin Dashboard</h1>
+            <!-- New Admin Navigation -->
+            <nav class="admin-main-nav">
+                <ul class="admin-dropdown-menu"> <!-- This will be the dropdown on mobile -->
+                    <li><a href="index.html" class="admin-nav-link">Home</a></li>
+                    <li><a href="#" id="logoutButton" class="admin-nav-link admin-logout-btn">Logout</a></li>
+                </ul>
+                <div class="admin-menu-icon-dots">&#x22EE;</div> <!-- Menu icon for mobile -->
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content-wrapper">
+        <section class="section-container dashboard-summary" id = "dashboard">
+            <h2>Dashboard Overview</h2>
+            <p class="section-description">A quick look at key metrics and recent activity.</p>
+            <div class="dashboard-cards">
+                <div class="dashboard-card glass-box">
+                    <h3>Total Messages</h3>
+                    <p class="card-metric" id="totalMessagesCount">0</p>
+                    <a href="#form-submissions" class="card-link">View All Messages</a>
+                </div>
+                <div class="dashboard-card glass-box">
+                    <h3>Total Page Views</h3>
+                    <p class="card-metric" id="totalPageViews">0</p>
+                    <a href="#" class="card-link">View Analytics</a>
+                </div>
+                <div class="dashboard-card glass-box">
+                    <h3>Unique Visitors (Approx)</h3>
+                    <p class="card-metric" id="uniqueVisitorsCount">0</p>
+                    <a href="#" class="card-link">More Details</a>
+                </div>
+                <div class="dashboard-card glass-box">
+                    <h3>New Messages (Today)</h3>
+                    <p class="card-metric" id="newMessagesToday">0</p>
+                    <a href="#form-submissions" class="card-link">Review Today</a>
+                </div>
+            </div>
+
+            <div class="admin-actions">
+                <button id="downloadCsvBtn" class="action-btn primary-action">Download Messages CSV</button>
+                <a href="#settings" class="action-btn primary-action">Admin Settings</a>
+                    <div id="messageStatus"></div>
+           
+            </div>
+            
+            </div>
+        </section>
+
+        <section id="form-submissions" class="section-container form-submissions-section glass-box">
+            <h2>Contact Form Submissions</h2>
+            <p class="section-description">Manage and review messages received through your portfolio's contact form.</p>
+
+            <div class="form-submissions-actions">
+                <div class="filter-group">
+                    <label for="message-filter">Filter Messages:</label>
+                    <select id="message-filter" class="styled-select">
+                        <option value="all">All Messages</option>
+                        <option value="today">Today</option>
+                        <option value="last7days">Last 7 Days</option>
+                        <option value="last30days">Last 30 Days</option>
+                        <option value="custom">Custom Date Range</option>
+                    </select>
+                </div>
+                <!-- Custom Date Range Section -->
+                <div id="custom-date-range" class="custom-date-range" style="display: none;">
+                    <label for="startDate">From:</label>
+                    <input type="date" id="startDate" class="styled-date-input">
+                    <label for="endDate">To:</label>
+                    <input type="date" id="endDate" class="styled-date-input">
+                    <button id="applyFilterBtn" class="action-btn secondary-action">Apply Filter</button>
+                </div>
+            </div>
+
+            <div class="messages-table-wrapper glass-box">
+                <table class="messages-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Message</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="messagesTableBody">
+                        <!-- Messages will be loaded here by JavaScript -->
+                        <tr><td colspan="6" style="text-align: center; padding: 20px;">Loading messages...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="data-note">Note: Messages are sorted by most recent first.</p>
+        </section>
+
+        <section id="settings" class="section-container admin-settings-section glass-box">
+            <h2>Admin Settings</h2>
+            <p class="section-description">Manage your admin account and application data.</p>
+
+            <div class="change-password-form-wrapper glass-box">
+                <h3>Change Password</h3>
+                <form id="changePasswordForm" class="change-password-form">
+                    <div class="admin-form-group">
+                        <label for="currentPassword">Current Password</label>
+                        <input type="password" id="currentPassword" required autocomplete="current-password">
+                    </div>
+                    <div class="admin-form-group">
+                        <label for="newPassword">New Password</label>
+                        <input type="password" id="newPassword" required autocomplete="new-password">
+                    </div>
+                    <div class="admin-form-group">
+                        <label for="confirmNewPassword">Confirm New Password</label>
+                        <input type="password" id="confirmNewPassword" required autocomplete="new-password">
+                    </div>
+                    <button type="submit" class="action-btn primary-action">Update Password</button>
+                    <p id="password-message" class="error-message"></p>
+                </form>
+            </div>
+
+            <div class="other-settings glass-box">
+                <h3>Data Management</h3>
+                <p>Use these options to manage your application's data.</p>
+                <div class="admin-actions">
+                    <button id="clearOldMessagesBtn" class="action-btn danger-action">Clear Old Messages (30+ Days)</button>
+                    <button id="resetAnalyticsDataBtn" class="action-btn danger-action">Reset All Analytics Data</button>
+                 
+               
+            </div>
+             <a href="#dashboard" class="back-home-btn">Back to top</a>
+                </div>
+                <ul>
+                    <li>Clearing messages older than 30 days.</li>
+                    <li>Resetting analytics data will erase all data.</li>
+                </ul>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-links">
+            <a href="https://github.com/rohit-x5" target="_blank" rel="noopener noreferrer">
+                <img src="assets/github.png" class="icon" alt="GitHub" />GitHub
+            </a>
+            <a href="https://www.linkedin.com/in/rohit-lokhande-5ba8a7278/" target="_blank" rel="noopener noreferrer">
+                <img src="assets/linkedin.png" class="icon" alt="LinkedIn" />LinkedIn
+            </a>
+            <a href="form.html">
+                <img src="assets/contact.png" class="icon" alt="Contact" />Contact Me
+            </a>
+        </div>
+        <p>&copy; <span id="current-year"></span> Rohit Lokhande. All rights reserved.</p>
+    </footer>
+</body>
+</html>

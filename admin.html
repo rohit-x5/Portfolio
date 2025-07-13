@@ -3,67 +3,128 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin Login | Rohit Lokhande</title>
-  <link rel="stylesheet" href="style.css" />
-  <link rel="icon" href="fevicon.png" type="image/png" />
+  <title>Admin Login</title>
+  <base href="/" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Inter:wght@300;400;500;600&family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/style.css" />
+  <link rel="icon" href="/assets/fevicon.png" type="image/png" />
 </head>
 <body>
-
-  <!-- Navigation Bar -->
-  <header>
-    <div class="nav-container">
-      <h1 class="logo">Rohit</h1>
-      <div class="menu-icon" onclick="toggleMenu()">☰</div>
+  <div class="admin-container">
+    <div class="admin-login-box glass-box">
+      <h1 class="login-title">Admin Login</h1>
+      <form id="admin-login-form" class="login-form">
+        <div class="admin-form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" placeholder="admin@example.com" required autocomplete="email" />
+        </div>
+        <div class="admin-form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" placeholder="password123" required autocomplete="current-password" />
+        </div>
+        <button type="submit" class="action-btn primary-action login-btn">Login</button>
+        <p id="login-message" class="error-message"></p>
+        <p id="forgotPasswordLink" class="forgot-password">Forgot Password?</p>
+      </form>
+      <a href="/index.html" class="back-home-btn">Return to Home</a>
     </div>
-    <nav id="navMenu" class="nav-links hidden">
-      <a href="index.html">Home</a>
-      <a href="about.html">About Me</a>
-      <a href="index.html#skills">Skills</a>
-      <a href="index.html#projects">Projects</a>
-    </nav>
-  </header>
+  </div>
 
-  <!-- Admin Login Section -->
-  <section class="section-container glass-box">
-    <h2>Secure Admin Access</h2>
-    <form onsubmit="return verifyLogin()">
-      <input type="text" id="adminID" placeholder="Enter Admin ID" required />
-      <input type="password" id="adminPass" placeholder="Enter Password" required />
-      <button type="submit">Login</button>
-      <p id="loginError" style="color: red; margin-top: 0.5rem;"></p>
-    </form>
-  </section>
+  <!-- Firebase Auth Logic -->
+  <script type="module">
+    const firebaseConfig = {
+      apiKey: "AIzaSyB8U1P8swKpFe5KUCby-CLSudOsAag_V04",
+      authDomain: "rohit-portfolio-f061b.firebaseapp.com",
+      databaseURL: "https://rohit-portfolio-f061b-default-rtdb.firebaseio.com",
+      projectId: "rohit-portfolio-f061b",
+      storageBucket: "rohit-portfolio-f061b.appspot.com",
+      messagingSenderId: "205796027031",
+      appId: "1:205796027031:web:2740bb9c8fd65c837657d2",
+      measurementId: "G-D722TTQJSD"
+    };
 
-  <!-- Footer -->
-  <footer>
-    <div class="footer-links">
-      <a href="#"><img src="assets/github.png" class="icon" alt="GitHub" />GitHub</a>
-      <a href="#"><img src="assets/linkedin.png" class="icon" alt="LinkedIn" />LinkedIn</a>
-    </div>
-    <p>&copy; 2025 Rohit Lokhande. All rights reserved.</p>
-  </footer>
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
 
-  <!-- JS -->
-  <script>
-    function toggleMenu() {
-      document.getElementById("navMenu").classList.toggle("hidden");
-    }
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    console.log("Firebase Auth initialized.");
 
-    function verifyLogin() {
-      const id = document.getElementById("adminID").value.trim();
-      const pass = document.getElementById("adminPass").value.trim();
-      const error = document.getElementById("loginError");
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('admin-login-form');
+      const emailInput = document.getElementById('email');
+      const passwordInput = document.getElementById('password');
+      const messageBox = document.getElementById('login-message');
+      const forgotPasswordLink = document.getElementById('forgotPasswordLink');
 
-      // Replace with real validation
-      if (id === "Rohit5" && pass === "Rohit@x55$") {
-        window.location.href = "admin-panel.html"; // Replace with actual dashboard
-        return false;
-      } else {
-        error.textContent = "Invalid Admin ID or Password.";
-        return false;
-      }
-    }
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        messageBox.textContent = '';
+        messageBox.classList.remove('success', 'error');
+
+        const email = emailInput.value.trim();
+        const password = passwordInput.value.trim();
+
+        try {
+          await signInWithEmailAndPassword(auth, email, password);
+          messageBox.textContent = 'Login successful! Redirecting...';
+          messageBox.classList.add('success');
+
+          setTimeout(() => {
+            window.location.href = '/admin-panel.html';
+          }, 500);
+        } catch (error) {
+          console.error("Login Error:", error.code);
+          let errorMsg = 'Login failed. Please try again.';
+
+          if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
+            errorMsg = 'Invalid email or password.';
+          } else if (error.code === 'auth/wrong-password') {
+            errorMsg = 'Incorrect password.';
+          } else if (error.code === 'auth/invalid-email') {
+            errorMsg = 'Invalid email format.';
+          } else if (error.code === 'auth/too-many-requests') {
+            errorMsg = 'Too many attempts. Please wait and try again.';
+          }
+
+          messageBox.textContent = errorMsg;
+          messageBox.classList.add('error');
+        }
+      });
+
+      forgotPasswordLink.addEventListener('click', async () => {
+        const email = emailInput.value.trim();
+        if (!email) {
+          messageBox.textContent = 'Please enter your email first.';
+          messageBox.classList.add('error');
+          return;
+        }
+
+        try {
+          await sendPasswordResetEmail(auth, email);
+          messageBox.textContent = 'Reset email sent! Check your inbox.';
+          messageBox.classList.add('success');
+        } catch (error) {
+          console.error("Password Reset Error:", error.code);
+          let resetMsg = 'Could not send reset email. Try again.';
+
+          if (error.code === 'auth/user-not-found') {
+            resetMsg = 'No user found with that email.';
+          } else if (error.code === 'auth/invalid-email') {
+            resetMsg = 'Invalid email format.';
+          } else if (error.code === 'auth/network-request-failed') {
+            resetMsg = 'Network issue. Try again.';
+          } else if (error.code === 'auth/too-many-requests') {
+            resetMsg = 'Too many reset attempts. Try later.';
+          }
+
+          messageBox.textContent = resetMsg;
+          messageBox.classList.add('error');
+        }
+      });
+    });
   </script>
-
 </body>
 </html>

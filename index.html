@@ -1,169 +1,168 @@
-<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;700&display=swap" rel="stylesheet">
-  <title>Rohit Lokhande | Portfolio</title>
-  <link rel="stylesheet" href="style.css" />
-  <link rel="icon" href="fevicon.png" type="image/png" />
+  <title>Rohit Lokhande - Portfolio</title>
+  <base href="/" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Inter:wght@300;400;500;600&family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/style.css" />
+  <link rel="icon" href="/assets/fevicon.png" type="image/png" />
 </head>
 <body>
 
-  <!-- Navigation Bar -->
-  <header>
-    <div class="nav-container">
-      <h2 class="logo">Rohit Lokhade</h2>
-      <div class="menu-icon" onclick="toggleMenu()">☰</div>
-    </div>
-    <nav id="navMenu" class="nav-links hidden">
-      <a href="#about">About Me</a>
-      <a href="#skills">Skills</a>
-      <a href="#projects">Projects</a>
-      <a href="admin.html">Admin Login</a>
-    </nav>
-  </header>
+  <div class="top-bar">
+    <div class="logo">Rohit Lokhande</div>
+    <div class="menu-icon-dots">&#x22EE;</div>
+    <ul class="dropdown-menu">
+      <li><a href="/index.html">Home</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="/form.html">Contact</a></li>
+      <li><a href="/admin.html">Admin Login</a></li>
+    </ul>
+  </div>
 
-  <!-- Hero Section -->
-  <section class="hero">
-    <div class="profile-display">
-      <img src="/assets/Profile.png" alt="Profile Picture" class="profile-image" />
+  <div class="main-content-wrapper">
+    <section class="hero-section">
+      <img src="/assets/Profile.png" alt="Rohit Lokhande" class="profile-image" />
       <div class="profile-info">
-        <h2 class="hero-title animate-name">Hi, I'm Rohit</h2>
-        <p class="tagline">Student exploring coding and AI</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- Skills Section -->
-  <section class="section-container glass-box" id="skills">
-    <h2>Skills</h2>
-    <div class="skill-boxes">
-      <div class="skill-box">
-        <h4>Programming</h4>
-        <ul>
-          <li>Python</li>
-          <li>JavaScript</li>
-          <li>C++</li>
-        </ul>
-      </div>
-      <div class="skill-box">
-        <h4>Technologies</h4>
-        <ul>
-          <li>HTML, CSS</li>
-          <li>Flask</li>
-          <li>Firebase</li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <!-- Projects Section -->
-  <section class="section-container glass-box" id="projects">
-    <h2>Projects</h2>
-    <p>Interesting AI & Robotics projects are on the way. Stay tuned!</p>
-  </section>
-
-  <!-- Footer -->
-  <footer>
-    <div class="footer-links">
-      <a href="https://github.com/rohit-x5"><img src="assets/github.png" class="icon" alt="GitHub" />GitHub</a>
-      <a href="https://www.linkedin.com/in/rohit-lokhande-5ba8a7278/"><img src="assets/linkedin.png" class="icon" alt="LinkedIn" />LinkedIn</a>
-      <a href="admin.html"><img src="assets/lock.png" class="icon" alt="Admin" />Admin Login</a>
-    </div>
-    <p>&copy; 2025 Rohit Lokhande. All rights reserved.</p>
-  </footer>
-
-  <!-- Toggle Menu Script -->
-  <script>
-    function toggleMenu() {
-      const menu = document.getElementById("navMenu");
-      menu.classList.toggle("hidden");
-    }
-  </script>
-
-</body>
-</html>
-=======
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rohit Lokhande | Portfolio</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
-    <link rel="icon" type="image/png" href="assets/fevicon.png" />
-</head>
-<body>
-
-    <header>
-        <h1>My Portfolio Website</h1>
-    </header>
-
-    <div class="profile-display">
-        <img src="assets/profile.png" alt="Profile Picture" class="profile-image" />
-        <div class="profile-info">
-            <h1><b>Rohit Lokhande</b></h1> <p class="tagline"><i>Be delusional</i></p>
+        <h2 class="hero-title">Hi, I'm Rohit</h2>
+        <div class="hero-description-wrapper glass-box">
+          <p class="hero-desc">
+            An Engineering student, Passionate about AI, future tech, and content creation.
+          </p>
         </div>
-    </div>
-
-    <section id="about">
-        <h2><i>About Me</i></h2>
-        <pre><b>Hi, I’m Rohit Lokhande</b> — a second-year Electronics and Computer Engineering student at Zeal College, Pune.
-I’m passionate about AI, robotics, coding, and content creation.
-I believe in learning by building — and I’m on a mission to create AI companions that feel truly alive.
-
-<i>Let’s connect and shape the future together! 🚀</i></pre>
+      </div>
     </section>
 
-    <hr />
-
-    <footer id="skills">
-        <div class="footer-skills">
-            <h3><i>Skills</i></h3>
-            <div class="skill-columns">
-                <div>
-                    <strong>Programming</strong>
-                    <ul>
-                        <li>Python (Basics)</li>
-                        <li>HTML (Basics)</li>
-                        <li>GitHub (Basics)</li>
-                    </ul>
-                </div>
-                <div>
-                    <strong>Creative Tools</strong>
-                    <ul>
-                        <li>Canva</li>
-                        <li>Video Editing</li>
-                        <li>Cinematography</li>
-                    </ul>
-                </div>
-                <div>
-                    <strong>Productivity</strong>
-                    <ul>
-                        <li>MS Word</li>
-                        <li>MS Excel</li>
-                        <li>PowerPoint</li>
-                    </ul>
-                </div>
-            </div>
+    <section class="section-container glass-box" id="skills">
+      <h2>Skills</h2>
+      <div class="skill-boxes">
+        <div class="skill-box glass-box">
+          <h4>Programming</h4>
+          <ul>
+            <li>Python (Basics)</li>
+            <li>HTML (Basics)</li>
+          </ul>
         </div>
-
-        <div class="footer-links">
-            <div class="connect-header">
-                <h3><i>Let's Connect.</i></h3>
-                <a href="form.html" class="contact-button">Contact Me</a>
-            </div>
-            <p>Email: <a href="mailto:rohitlokhande.x5@gmail.com">rohitlokhande.x5@gmail.com</a></p>
-            <p>LinkedIn: <a href="https://linkedin.com/in/rohit-lokhande" target="_blank">linkedin.com/in/rohit-lokhande</a></p>
-            <p>Phone: +91 87664 93996</p>
+        <div class="skill-box glass-box">
+          <h4>Content Creation</h4>
+          <ul>
+            <li>Video Editing</li>
+            <li>Cinematography</li>
+            <li>Graphic Design (Canva)</li>
+          </ul>
         </div>
-    </footer>
+        <div class="skill-box glass-box">
+          <h4>Tools & Concepts</h4>
+          <ul>
+            <li>Git & GitHub</li>
+            <li>MS Office</li>
+          </ul>
+        </div>
+      </div>
+    </section>
 
+    <section class="section-container glass-box" id="projects">
+      <h2>Projects</h2>
+      <p>Interesting projects are on the way.<br />Stay tuned!</p>
+    </section>
+
+    <div class="lets-connect-wrapper">
+      <a href="/form.html" class="connect-btn">Let’s Connect</a>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-links">
+      <a href="https://github.com/rohit-x5" target="_blank" rel="noopener noreferrer">
+        <img src="/assets/github.png" class="icon" alt="GitHub" />GitHub
+      </a>
+      <a href="https://www.linkedin.com/in/rohit-lokhande-5ba8a7278/" target="_blank" rel="noopener noreferrer">
+        <img src="/assets/linkedin.png" class="icon" alt="LinkedIn" />LinkedIn
+      </a>
+      <a href="/form.html">
+        <img src="/assets/contact.png" class="icon" alt="Contact" />Contact Me
+      </a>
+    </div>
+    <p>&copy; <span id="current-year"></span> Rohit Lokhande. All rights reserved.</p>
+  </footer>
+
+  <!-- Firebase & Analytics Script -->
+  <script type="module">
+    const firebaseConfig = {
+      apiKey: "AIzaSyB8U1P8swKpFe5KUCby-CLSudOsAag_V04",
+      authDomain: "rohit-portfolio-f061b.firebaseapp.com",
+      databaseURL: "https://rohit-portfolio-f061b-default-rtdb.firebaseio.com",
+      projectId: "rohit-portfolio-f061b",
+      storageBucket: "rohit-portfolio-f061b.appspot.com",
+      messagingSenderId: "205796027031",
+      appId: "1:205796027031:web:2740bb9c8fd65c837657d2",
+      measurementId: "G-D722TTQJSD"
+    };
+
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-analytics.js";
+    import { getDatabase, ref, runTransaction, push, set } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const database = getDatabase(app);
+    console.log("Firebase initialized.");
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const menuIcon = document.querySelector('.menu-icon-dots');
+      const dropdownMenu = document.querySelector('.dropdown-menu');
+
+      if (menuIcon && dropdownMenu) {
+        menuIcon.addEventListener('click', (event) => {
+          event.stopPropagation();
+          dropdownMenu.classList.toggle('active');
+        });
+
+        document.addEventListener('click', (event) => {
+          if (!dropdownMenu.contains(event.target) && !menuIcon.contains(event.target)) {
+            dropdownMenu.classList.remove('active');
+          }
+        });
+
+        dropdownMenu.querySelectorAll('a').forEach(link => {
+          link.addEventListener('click', () => {
+            dropdownMenu.classList.remove('active');
+          });
+        });
+      }
+
+      const currentYearSpan = document.getElementById('current-year');
+      if (currentYearSpan) {
+        currentYearSpan.textContent = new Date().getFullYear();
+      }
+
+      const trackUserActivity = async () => {
+        const pageViewsRef = ref(database, 'userTracking/pageViews');
+        const uniqueVisitorsRef = ref(database, 'userTracking/uniqueVisitors');
+        const visitsRef = ref(database, 'userTracking/visits');
+
+        runTransaction(pageViewsRef, current => (current || 0) + 1);
+
+        let visitorId = localStorage.getItem('portfolio_visitor_id');
+        if (!visitorId) {
+          visitorId = 'visitor_' + Date.now() + '_' + Math.random().toString(36).substring(2, 9);
+          localStorage.setItem('portfolio_visitor_id', visitorId);
+          runTransaction(uniqueVisitorsRef, current => (current || 0) + 1);
+        }
+
+        const newVisitRef = push(visitsRef);
+        set(newVisitRef, {
+          timestamp: Date.now()
+        });
+      };
+
+      trackUserActivity();
+    });
+  </script>
 </body>
 </html>
->>>>>>> 104ea33c8ae522c77728e8d321002121c29a28de

@@ -1,46 +1,25 @@
-<<<<<<< HEAD
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Thank You</title>
-  <link rel="stylesheet" href="style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
-</head>
-<body>
-  <div class="form-page-container">
-    <h1>Thank You!</h1>
-    <p>Your message has been received. I will get back to you soon.</p>
-    <p class="back-link-wrapper">
-      <a href="index.html" class="back-link">&larr; Back to Home</a>
-    </p>
-  </div>
-</body>
-</html>
-=======
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Thank You!</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Inter:wght@300;400;500;600&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+    <link rel="icon" href="assets/fevicon.png" type="image/png" />
 </head>
 <body>
-    <div class="thank-you-container">
-        <h1>Thank You!</h1>
-        <p>Your message has been received. I'll get back to you shortly.</p>
-        <p class="redirect-message">You will be redirected to the homepage in 5 seconds...</p>
-        <a href="index.html">Return to Homepage</a>
+    <div class="thank-you-container glass-box">
+        <div class="icon-wrapper">
+            <!-- Using a simple checkmark emoji for the icon as no external icon library is linked -->
+            <span class="animated-icon">&#x2714;</span> 
+        </div>
+        <h1 class="animated-text">Thank You!</h1>
+        <p class="animated-text">Your message has been successfully sent.</p>
+        <p class="animated-text">I appreciate you reaching out and will get back to you shortly.</p>
+        <a href="index.html" class="back-home-btn">Return to Home</a>
     </div>
-
-    <script>
-        setTimeout(function() {
-            window.location.href = 'index.html';
-        }, 5000); // Redirect after 5 seconds
-    </script>
 </body>
 </html>
->>>>>>> 104ea33c8ae522c77728e8d321002121c29a28de

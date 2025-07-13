@@ -1,768 +1,2046 @@
-<<<<<<< HEAD
-/* Reset and Base Styles */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Poppins', sans-serif;
-}
+/*
+ * =============================================================================
+ * Project: Rohit Lokhande Portfolio Website - Comprehensive Stylesheet
+ * Author: Gemini
+ * Date: July 13, 2025
+ * Version: 5.2 (Always-On Dropdown Navigation for index.html)
+ * Description: This stylesheet provides a complete, responsive design for the
+ * Rohit Lokhande portfolio website, including the main pages,
+ * contact form, admin login, and admin dashboard. It implements
+ * a dark theme with glassmorphism effects and ensures full
+ * mobile-friendliness across all sections, specifically
+ * addressing navigation menus for both the main site and the
+ * admin panel, and optimizing table and form layouts for small screens.
+ *
+ * This version has been thoroughly reviewed for consistency in input styling
+ * and overall mobile responsiveness, with specific focus on admin-panel.html.
+ *
+ * IMPORTANT: This version modifies index.html's navigation to always be a
+ * dropdown menu, controlled by an icon, regardless of screen size.
+ * =============================================================================
+ */
 
-body {
-  background-color: #f8f9fa;
-  color: #333;
-  line-height: 1.6;
-  position: relative;
-  z-index: 1;
-  min-height: 100vh;
-  padding-bottom: 4rem;
-}
+/* =============================================================================
+ * 1. BASE STYLES & UNIVERSAL RULES
+ * - Box-sizing, font imports (if needed), root variables, body defaults.
+ * =============================================================================
+ */
 
-/* Doodle Background with Higher Opacity */
-body::before {
-  content: "";
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-  background-image: url("assets/doodle-bg.png");
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  background-position: center;
-  opacity: 0.12;
-  z-index: -1;
-=======
-/* CSS Variables for a Modern & Better Color Scheme */
-:root {
-    --primary-dark: #2c3e50;         /* Deep Charcoal Blue - for headers, footers, primary accents */
-    --secondary-dark: #34495e;       /* Slightly Lighter Charcoal Blue - for backgrounds in dark sections */
-    --accent-blue: #3498db;          /* Vibrant Blue - for buttons, links, highlights */
-    --text-on-dark: #ecf0f1;         /* Off-White - for text on dark backgrounds */
-    --text-on-light: #2d3d4f;        /* Dark Grey Blue - for text on light backgrounds */
-    --background-light: #f5f7fa;     /* Very Light Grey - for main content sections */
-    --background-body: #ecf0f1;      /* Light Grey - for overall body background */
-    --border-light: #bdc3c7;         /* Soft Grey - for borders and subtle dividers */
-    --shadow-soft: rgba(0, 0, 0, 0.15); /* Slightly more prominent shadow */
-    --transition-speed: all 0.3s ease-in-out;
-}
-
-/* General Body Styles */
-body {
-    font-family: 'Poppins', sans-serif;
-    line-height: 1.7;
+/* Universal Box-Sizing for easier layout calculations */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    background-color: var(--background-body); /* Light Grey body background */
-    color: var(--text-on-light);
-    scroll-behavior: smooth;
->>>>>>> 104ea33c8ae522c77728e8d321002121c29a28de
 }
 
-/* Header (Thinner Nav Bar) */
-header {
-<<<<<<< HEAD
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 2rem;
-  background-color: #ffffff;
-  border-bottom: 1px solid #ddd;
+/*
+ * Font Imports (from your HTML)
+ * These links are typically placed in the <head> of your HTML files.
+ * If they are already there, you do NOT need to @import them again here.
+ * Uncomment the @import rules below ONLY if you prefer to manage them
+ * directly from your CSS and have removed them from your HTML <head>.
+ */
+/*
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+*/
+
+/* --- THEME VARIABLES: Centralized for easy theme management --- */
+:root {
+    /* Color Palette - Dark Theme with Cyan Accents */
+    --primary-text-color: #e0e0e0; /* Light gray for main text and headings */
+    --secondary-text-color: #a0a0a0; /* Slightly darker light gray for descriptions, sub-text */
+    --accent-color: #8be9fd; /* Vibrant light blue/cyan for interactive elements, highlights */
+    --background-color: #1a232e; /* Very dark blue for the main background */
+
+    /* Action & Status Colors */
+    --primary-action-color: #007bff; /* Standard blue for primary buttons */
+    --primary-action-hover: #0056b3; /* Darker blue on hover for primary buttons */
+    --secondary-action-color: #6c757d; /* Muted gray for secondary buttons */
+    --secondary-action-hover: #5a6268; /* Darker gray on hover for secondary buttons */
+    --danger-color: #ef5350; /* Red for destructive actions (e.g., delete, logout) */
+    --danger-hover: #d32f2f; /* Darker red on hover for danger actions */
+    --success-color: #8bc34a; /* Green for success messages/icons */
+    --info-color: #2196f3; /* Blue for informational messages */
+    --warning-color: #ffc107; /* Yellow for warnings */
+
+    /* Glass Effect Properties */
+    --glass-bg-color: rgba(30, 45, 60, 0.7); /* Darker semi-transparent background for glass elements */
+    --glass-border-color: rgba(60, 75, 90, 0.5); /* Slightly lighter dark border for glass elements */
+    --glass-shadow-color: rgba(0, 0, 0, 0.4); /* Darker, more pronounced shadow for glass elements */
+    --glass-blur-amount: 15px; /* Standard blur level for glassmorphism */
+
+    /* Font Families - Defined using fallbacks */
+    --font-outfit: 'Outfit', sans-serif;   /* For prominent headings */
+    --font-inter: 'Inter', sans-serif;     /* For body text, forms, general UI */
+    --font-poppins: 'Poppins', sans-serif; /* For buttons, specific call-to-actions */
+
+    /* Font Weights - Standardized for consistency */
+    --font-weight-light: 300;
+    --font-weight-regular: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+
+    /* Spacing Units - Consistent padding and margins */
+    --spacing-xs: 0.5rem;   /* 8px */
+    --spacing-sm: 1rem;     /* 16px */
+    --spacing-md: 1.5rem;   /* 24px */
+    --spacing-lg: 2rem;     /* 32px */
+    --spacing-xl: 3rem;     /* 48px */
+    --spacing-xxl: 4rem;    /* 64px */
+
+    /* Border Radii - Consistent rounded corners */
+    --border-radius-sm: 8px;
+    --border-radius-md: 12px;
+    --border-radius-lg: 16px;
+    --border-radius-pill: 30px; /* For pill-shaped buttons */
+    --border-radius-circle: 50%; /* For circular elements like profile images */
+
+    /* Transition Durations - Smooth animations */
+    --transition-speed-fast: 0.2s;
+    --transition-speed-normal: 0.3s;
+    --transition-speed-slow: 0.5s;
+    --transition-ease: ease-in-out;
 }
 
-header h1 {
-  font-size: 1.5rem;
-  font-weight: 600;
+/* --- Base Body Styling --- */
+body {
+    font-family: var(--font-inter), sans-serif; /* Default body font */
+    line-height: 1.6; /* Improved readability for long text blocks */
+    color: var(--primary-text-color); /* Default text color */
+    background-color: var(--background-color); /* Fallback background color */
+    min-height: 100vh; /* Ensures body takes at least full viewport height */
+    display: flex; /* Enables flexbox layout for main content and footer */
+    flex-direction: column; /* Stacks children vertically */
+    overflow-x: hidden; /* CRITICAL: Prevents horizontal scrollbar from appearing on the body */
+
+    /* SVG background properties - Ensures background is fully visible and responsive */
+    background-image: url('assets/background.svg'); /* Path to your SVG background image */
+    background-size: cover; /* Scales the background image to cover the entire viewport */
+    background-position: center center; /* Centers the background image */
+    background-repeat: no-repeat; /* Prevents the background image from repeating */
+    background-attachment: fixed; /* Keeps the background fixed during page scroll */
+    position: relative; /* Establishes a positioning context for z-index */
+    z-index: 1; /* Ensures body content is on a layer above the background */
 }
 
-header a {
-  text-decoration: none;
-  color: #555;
-  font-weight: 500;
+/* Ensures main content is above any potential background layers or decorative elements */
+.main-content-wrapper {
+    position: relative; /* Establishes a positioning context */
+    z-index: 2; /* Higher z-index to appear above body background */
+    flex-grow: 1; /* Allows main content to take up available vertical space */
+    padding: var(--spacing-lg) var(--spacing-sm); /* Responsive padding: 2rem top/bottom, 1rem left/right */
+    max-width: 1200px; /* Limits content width for better readability on large screens */
+    margin: 0 auto; /* Centers the content wrapper horizontally */
+    display: flex; /* Enables flexbox layout for sections within */
+    flex-direction: column; /* Stacks sections vertically */
+    gap: var(--spacing-lg); /* Space between major sections */
 }
 
-/* Hero Section */
-.hero {
-  padding: 2rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: transparent;
+/* --- Typography Styling for Headings and Paragraphs --- */
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-outfit), sans-serif; /* Headings use Outfit font */
+    color: var(--primary-text-color); /* Consistent heading color */
+    font-weight: var(--font-weight-bold); /* Default bold weight for headings */
+    margin-bottom: var(--spacing-sm); /* Standard bottom margin for headings */
+    line-height: 1.2; /* Tighter line height for better heading appearance */
 }
 
-.profile-display {
-  display: flex;
-  align-items: center;
-  gap: 2rem;
+h1 {
+    font-size: 3rem; /* Larger for main hero title */
+    font-weight: var(--font-weight-bold);
+}
+
+h2 {
+    font-size: 2.4rem; /* Adjusted for section titles */
+    text-align: center; /* Centers section titles */
+    margin-bottom: var(--spacing-md); /* More space below section titles */
+    color: var(--accent-color); /* Highlight section titles with accent color */
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4); /* Subtle text shadow for depth */
+}
+
+h3 {
+    font-size: 1.8rem;
+    font-weight: var(--font-weight-semibold);
+}
+
+h4 {
+    font-size: 1.3rem;
+    font-weight: var(--font-weight-medium);
+}
+
+p {
+    margin-bottom: var(--spacing-sm); /* Standard bottom margin for paragraphs */
+    font-size: 1rem; /* Default paragraph font size */
+    color: var(--secondary-text-color); /* Slightly muted color for body text */
+    font-weight: var(--font-weight-regular);
+}
+
+/* Anchor (Link) Styling */
+a {
+    color: var(--accent-color); /* Links use accent color */
+    text-decoration: none; /* Removes default underline */
+    transition: color var(--transition-speed-normal) var(--transition-ease); /* Smooth color transition on hover */
+}
+
+a:hover {
+    color: #a4f2ff; /* Lighter accent on hover for dark theme contrast */
+    text-decoration: underline; /* Add underline on hover for clarity */
+}
+
+/* --- Reusable Utility Classes --- */
+
+/* Glass Effect Box Styling */
+.glass-box {
+    background: var(--glass-bg-color); /* Semi-transparent background */
+    backdrop-filter: blur(var(--glass-blur-amount)); /* Blur effect */
+    -webkit-backdrop-filter: blur(var(--glass-blur-amount)); /* Vendor prefix for Safari */
+    border-radius: var(--border-radius-lg); /* Rounded corners */
+    border: 1px solid var(--glass-border-color); /* Subtle border */
+    box-shadow: 0 8px 32px 0 var(--glass-shadow-color); /* Soft shadow for depth */
+    padding: var(--spacing-lg); /* Standard padding inside the box */
+    margin-bottom: var(--spacing-lg); /* Standard bottom margin for stacking */
+    transition: all var(--transition-speed-normal) var(--transition-ease); /* Smooth transitions for hover effects */
+}
+
+.glass-box:hover {
+    box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.45); /* Enhanced shadow on hover */
+    transform: translateY(-3px); /* Slight lift effect */
+}
+
+/* Action Button Styling */
+.action-btn {
+    display: inline-block; /* Allows padding and margin, but respects content width */
+    padding: var(--spacing-sm) var(--spacing-md); /* Standard padding for buttons */
+    border-radius: var(--border-radius-sm); /* Slightly rounded corners */
+    font-weight: var(--font-weight-semibold); /* Bolder text for buttons */
+    text-align: center; /* Centers text within the button */
+    cursor: pointer; /* Indicates clickable element */
+    transition: all var(--transition-speed-normal) var(--transition-ease); /* Smooth transitions */
+    border: none; /* Removes default button border */
+    font-family: var(--font-inter), sans-serif; /* Button text font */
+    font-size: 1rem; /* Standard button font size */
+    white-space: nowrap; /* Prevents button text from wrapping */
+    text-decoration: none; /* Ensures no underline for anchor buttons */
+}
+
+.primary-action {
+    background-color: var(--primary-action-color); /* Primary blue background */
+    color: #ffffff; /* White text */
+    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3); /* Soft shadow */
+}
+
+.primary-action:hover {
+    background-color: var(--primary-action-hover); /* Darker blue on hover */
+    box-shadow: 0 6px 15px rgba(0, 123, 255, 0.4); /* Enhanced shadow on hover */
+    transform: translateY(-2px); /* Slight lift effect */
+}
+
+.secondary-action {
+    background-color: var(--secondary-action-color); /* Muted gray background */
+    color: #ffffff; /* White text */
+    box-shadow: 0 4px 10px rgba(108, 117, 125, 0.3); /* Soft shadow */
+}
+
+.secondary-action:hover {
+    background-color: var(--secondary-action-hover); /* Darker gray on hover */
+    box-shadow: 0 6px 15px rgba(108, 117, 125, 0.4); /* Enhanced shadow on hover */
+    transform: translateY(-2px); /* Slight lift effect */
+}
+
+.danger-action {
+    background-color: var(--danger-color); /* Red background for danger */
+    color: #ffffff; /* White text */
+    box-shadow: 0 4px 10px rgba(239, 83, 80, 0.3); /* Soft shadow */
+}
+
+.danger-action:hover {
+    background-color: var(--danger-hover); /* Darker red on hover */
+    box-shadow: 0 6px 15px rgba(239, 83, 80, 0.4); /* Enhanced shadow on hover */
+    transform: translateY(-2px); /* Slight lift effect */
+}
+
+/* Message Status Styling */
+.success-message {
+    color: var(--success-color); /* Green for success */
+    font-weight: var(--font-weight-medium);
+    margin-top: var(--spacing-sm);
+    text-align: center;
+}
+
+.error-message {
+    color: var(--danger-color); /* Red for errors */
+    font-weight: var(--font-weight-medium);
+    margin-top: var(--spacing-sm);
+    text-align: center;
+}
+
+/* --- Section Container Styling --- */
+.section-container {
+    padding: var(--spacing-xl); /* Generous padding for sections */
+    margin-bottom: var(--spacing-xl); /* Space between sections */
+    text-align: center; /* Default text alignment for sections */
+}
+
+/* =============================================================================
+ * 2. INDEX.HTML (MAIN PORTFOLIO PAGE) STYLES
+ * - Top Bar, Hero Section, Skills, Projects, Contact, Let's Connect.
+ * =============================================================================
+ */
+
+/* --- Top Bar / Main Navigation (index.html) --- */
+.top-bar {
+    display: flex; /* Uses flexbox for horizontal alignment */
+    justify-content: space-between; /* Pushes logo to left, nav to right */
+    align-items: center; /* Vertically centers items */
+    padding: var(--spacing-sm) var(--spacing-md); /* Padding for the top bar */
+    background: rgba(30, 45, 60, 0.95); /* Semi-transparent dark background */
+    backdrop-filter: blur(10px); /* Blur effect */
+    -webkit-backdrop-filter: blur(10px); /* Vendor prefix */
+    border-bottom: 1px solid rgba(60, 75, 90, 0.7); /* Subtle bottom border */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5); /* Shadow for depth */
+    position: sticky; /* Makes the header stick to the top */
+    top: 0; /* Sticks to the very top */
+    z-index: 1000; /* Ensures it's above other content */
+    flex-wrap: wrap; /* Allows items to wrap on smaller screens */
+}
+
+.top-bar .logo {
+    font-family: var(--font-outfit), sans-serif; /* Logo font */
+    font-weight: var(--font-weight-bold);
+    font-size: 1.8rem; /* Logo size */
+    color: var(--primary-text-color); /* Logo color */
+    user-select: none; /* Prevents text selection */
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Subtle text shadow */
+}
+
+/* Ellipsis Icon for ALL Navigation (index.html) - ALWAYS VISIBLE */
+.menu-icon-dots {
+    cursor: pointer; /* Indicates clickable */
+    font-size: 1.8rem; /* Icon size */
+    color: var(--primary-text-color); /* Icon color */
+    padding: var(--spacing-xs); /* Padding around the icon */
+    border-radius: var(--border-radius-sm); /* Rounded corners */
+    transition: background-color var(--transition-speed-normal) var(--transition-ease); /* Smooth hover effect */
+    display: block; /* Always visible now */
+    z-index: 1001; /* Ensures it's above the dropdown when active */
+    position: relative; /* For dropdown positioning */
+}
+
+.menu-icon-dots:hover {
+    background-color: rgba(255, 255, 255, 0.1); /* Light background on hover */
+}
+
+/* Main Dropdown Menu (index.html) - Always a dropdown */
+.dropdown-menu {
+    list-style: none; /* Removes bullet points */
+    margin: 0;
+    padding: 0;
+    display: flex; /* Default to flex for internal stacking */
+    flex-direction: column; /* Stack links vertically */
+    position: absolute; /* Position relative to .top-bar (or its containing block) */
+    top: 100%; /* Position below the top-bar */
+    right: var(--spacing-md); /* Align to right edge */
+    background: rgba(29, 44, 60, 0.98); /* Darker background for dropdown */
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    width: 180px; /* Fixed width for dropdown */
+    border-radius: var(--border-radius-sm);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(139, 233, 253, 0.2);
+    padding: 0.5rem 0; /* Adjusted padding */
+    opacity: 0; /* Hidden initially */
+    transform: translateY(-10px); /* Slight initial offset */
+    transition: opacity 0.3s ease, transform 0.3s ease; /* Smooth animation */
+    z-index: 990; /* Lower than menu-icon-dots, higher than content */
+    pointer-events: none; /* Prevents interaction when hidden */
+}
+
+.dropdown-menu.active {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: all; /* Allows interaction when active */
+}
+.dropdown-menu li {
+    width: 100%; /* Full width list items */
+}
+.dropdown-menu li a {
+    padding: 0.6rem 1rem; /* Adjusted link padding */
+    width: calc(100% - 2rem); /* Account for padding */
+    display: block; /* Make links block level */
+    text-align: left; /* Align text left */
+    border-radius: 0; /* No rounded corners inside dropdown */
+    font-size: 1rem; /* Adjusted font size */
+    color: var(--primary-text-color); /* Link color */
+    text-decoration: none;
+    transition: all var(--transition-speed-normal) var(--transition-ease);
+}
+.dropdown-menu li a:hover {
+    background-color: rgba(139, 233, 253, 0.1);
+    transform: none; /* No lift effect in dropdown */
+    box-shadow: none;
+    color: var(--accent-color);
+}
+
+
+/* --- Hero Section (index.html) --- */
+.hero-section {
+    display: flex; /* Uses flexbox for layout */
+    flex-direction: column; /* Stacks items vertically by default (mobile-first) */
+    align-items: center; /* Centers items horizontally */
+    text-align: center; /* Centers text */
+    gap: var(--spacing-md); /* Space between image and info */
+    padding: var(--spacing-sm); /* Padding for the section */
+    min-height: calc(100vh - 80px); /* Adjusts height based on header (approx) */
+    justify-content: center; /* Centers content vertically */
 }
 
 .profile-image {
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid #ccc;
+    width: 160px; /* Fixed width for profile image */
+    height: 160px; /* Fixed height for profile image */
+    border-radius: var(--border-radius-circle); /* Makes it perfectly circular */
+    object-fit: cover; /* Ensures image covers the area without distortion */
+    border: 4px solid var(--glass-border-color); /* Border matching glass theme */
+    box-shadow: 0 4px 20px var(--glass-shadow-color); /* Shadow for depth */
+    flex-shrink: 0; /* Prevents image from shrinking on smaller screens */
 }
 
 .profile-info {
-  text-align: left;
+    max-width: 600px; /* Limits width of text content */
 }
 
 .hero-title {
-  font-size: 2rem;
-  font-weight: 700;
-  margin-bottom: 0.3rem;
+    font-size: 2.8rem; /* Adjusted hero title size for mobile */
+    margin-bottom: var(--spacing-xs); /* Reduced margin */
+    line-height: 1.2;
+    color: var(--primary-text-color);
+    text-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); /* Prominent text shadow */
 }
 
-/* Animate Name */
-.animate-name {
-  opacity: 0;
-  transform: translateY(20px);
-  animation: fadeSlideIn 1.2s ease-out forwards;
+.hero-description-wrapper {
+    padding: var(--spacing-md); /* Padding inside the glass box */
 }
 
-@keyframes fadeSlideIn {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.hero-desc {
+    font-size: 1rem; /* Default description font size */
+    color: var(--secondary-text-color);
+    font-weight: var(--font-weight-regular);
+    margin-bottom: 0; /* No bottom margin if it's the last element */
 }
 
-.tagline {
-  font-style: italic;
-  color: #666;
+.hero-buttons {
+    display: flex; /* Uses flexbox for buttons */
+    flex-direction: column; /* Stacks buttons vertically by default (mobile-first) */
+    gap: var(--spacing-sm); /* Space between buttons */
+    margin-top: var(--spacing-md); /* Space above buttons */
 }
 
-/* Sections */
-.section-container {
-  padding: 2rem;
-  margin: 1.5rem;
-  border-radius: 8px;
-  background-color: #fff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+.hero-btn {
+    padding: 0.8rem 1.5rem; /* Padding for hero buttons */
+    border-radius: var(--border-radius-pill); /* Pill-shaped buttons */
+    font-weight: var(--font-weight-bold);
+    font-size: 1rem; /* Button font size */
+    text-transform: uppercase; /* Uppercase text */
+    letter-spacing: 0.05em; /* Letter spacing */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); /* Button shadow */
+    transition: all var(--transition-speed-normal) var(--transition-ease); /* Smooth transitions */
+    text-decoration: none; /* No underline */
+    width: 100%; /* Full width on mobile */
+    text-align: center; /* Center text */
 }
 
-.section-container:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+.hero-btn.primary {
+    background-color: var(--accent-color); /* Accent color background */
+    color: var(--background-color); /* Dark text on accent background */
 }
 
-.section-container h2 {
-  font-size: 1.75rem;
-  margin-bottom: 1rem;
-  border-bottom: 2px solid #222;
-  display: inline-block;
-  padding-bottom: 0.25rem;
+.hero-btn.primary:hover {
+    background-color: #61dafb; /* Lighter accent on hover */
+    transform: translateY(-3px); /* Lift effect */
+    box-shadow: 0 8px 20px rgba(139, 233, 253, 0.6); /* Enhanced shadow */
 }
 
-/* Skill Boxes */
-.skills-wrapper {
-  background-color: #f1f1f1;
+.hero-btn.secondary {
+    background-color: transparent; /* Transparent background */
+    color: var(--accent-color); /* Accent color text */
+    border: 2px solid var(--accent-color); /* Accent color border */
 }
 
+.hero-btn.secondary:hover {
+    background-color: rgba(139, 233, 253, 0.1); /* Light accent background on hover */
+    transform: translateY(-3px); /* Lift effect */
+    box-shadow: 0 8px 20px rgba(139, 233, 253, 0.4); /* Enhanced shadow */
+}
+
+/* --- Skills Section (index.html) --- */
 .skill-boxes {
-  display: flex;
-  justify-content: space-between;
-  gap: 1.5rem;
-  margin-top: 1rem;
-  flex-wrap: wrap;
+    display: grid; /* Uses grid for layout */
+    grid-template-columns: 1fr; /* Single column by default (mobile-first) */
+    gap: var(--spacing-md); /* Space between skill boxes */
+    max-width: 900px; /* Limits grid width on larger screens */
+    margin: 0 auto; /* Centers the grid */
 }
 
 .skill-box {
-  flex: 1 1 30%;
-  background-color: #fff;
-  padding: 1.2rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-align: center; /* Centers content within the box */
+    background: rgba(30, 45, 60, 0.8); /* Darker semi-transparent background */
+    backdrop-filter: blur(var(--glass-blur-amount)); /* Blur effect */
+    -webkit-backdrop-filter: blur(var(--glass-blur-amount));
+    border-radius: var(--border-radius-lg); /* Rounded corners */
+    border: 1px solid var(--glass-border-color); /* Subtle border */
+    box-shadow: 0 4px 20px var(--glass-shadow-color); /* Shadow */
+    padding: var(--spacing-md); /* Padding inside the box */
+    transition: all var(--transition-speed-normal) var(--transition-ease); /* Smooth transitions */
 }
 
 .skill-box:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    transform: translateY(-5px); /* Lift effect on hover */
+    background-color: rgba(40, 55, 70, 0.9); /* Slightly less transparent on hover */
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5); /* Enhanced shadow */
 }
 
 .skill-box h4 {
-  font-size: 1.1rem;
-  color: #007bff;
-  margin-bottom: 0.5rem;
+    margin-bottom: var(--spacing-sm); /* Space below skill category title */
+    color: var(--accent-color); /* Accent color for category title */
 }
 
-ul {
-  list-style: none;
-  padding-left: 1rem;
-}
-
-ul li::before {
-  content: '▹';
-  color: #007bff;
-  margin-right: 0.5rem;
-}
-
-/* Contact Button */
-.contact-button {
-  background-color: transparent;
-  color: #007bff;
-  border: 2px solid #007bff;
-  padding: 0.5rem 1rem;
-  font-size: 0.95rem;
-  border-radius: 4px;
-  cursor: pointer;
-  text-decoration: none;
-  transition: all 0.3s ease;
-  display: inline-block;
-  margin-top: 1rem;
-}
-
-.contact-button:hover {
-  background-color: #007bff;
-  color: white;
-}
-
-
-/* Social Links */
-.footer-links {
-  margin-top: 1rem;
-}
-
-.footer-links p {
-  margin: 0.5rem 0;
-  font-size: 0.95rem;
-}
-
-.footer-links img {
-  height: 20px;
-  vertical-align: middle;
-  margin-right: 8px;
-=======
-    background-color: var(--primary-dark); /* Deep Charcoal Blue */
-    color: var(--text-on-dark);
-    padding: 0.8rem 0; /* Made thinner */
-    text-align: center;
-    box-shadow: 0 4px 8px var(--shadow-soft);
-}
-
-header h1 {
-    margin: 0;
-    font-size: 2.5rem; /* Slightly adjusted font size */
-    font-weight: 600;
-}
-
-/* Profile Display Section (Center of Attraction) */
-.profile-display {
-    display: flex;
-    align-items: center; /* Vertically centers content */
-    justify-content: center; /* Horizontally centers content */
-    margin-top: 30px; /* Added gap after the header */
-    padding: 40px 20px;
-    background-color: var(--primary-dark); /* Deep Charcoal Blue */
-    color: var(--text-on-dark);
-    box-shadow: 0 2px 10px var(--shadow-soft);
-    gap: 30px; /* Space between image and text */
-    flex-direction: row-reverse; /* Changed order: picture right, name left */
-}
-
-.profile-image {
-    height: 150px;
-    width: 150px;
-    border-radius: 50%;
-    border: 5px solid var(--text-on-dark); /* Off-White border */
-    object-fit: cover;
-    transition: var(--transition-speed);
-}
-
-.profile-image:hover {
-    transform: scale(1.05);
-}
-
-.profile-info h1 {
-    margin: 0;
-    font-size: 3rem;
-    font-weight: 800;
-    text-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
-}
-
-.profile-info .tagline {
-    font-size: 1.2rem;
-    color: var(--accent-blue); /* Vibrant Blue for tagline */
-    margin: 8px 0 0;
-    font-style: italic;
->>>>>>> 104ea33c8ae522c77728e8d321002121c29a28de
-}
-
-/* Section Styling (About & General) */
-section {
-    padding: 80px 30px;
-    margin: 30px auto;
-    max-width: 900px;
-    background-color: var(--background-light); /* Very Light Grey */
-    border-radius: 10px;
-    box-shadow: 0 8px 20px var(--shadow-soft);
-    text-align: center;
-}
-
-section h2 {
-    color: var(--primary-dark); /* Deep Charcoal Blue for headings */
-    font-size: 2.5rem;
-    margin-bottom: 30px;
-    font-weight: 600;
-    position: relative;
-    padding-bottom: 10px;
-}
-
-section h2::after {
-    content: '';
-    position: absolute;
-    width: 80px;
-    height: 4px;
-    background: var(--accent-blue); /* Vibrant Blue underline */
-    left: 50%;
-    transform: translateX(-50%);
-    bottom: 0;
-    border-radius: 2px;
-}
-
-section pre {
-    white-space: pre-wrap;
-    text-align: left;
-    max-width: 700px;
-    margin: 0 auto;
-    font-size: 1.15em;
-    line-height: 1.8;
-    color: var(--text-on-light);
-}
-
-/* Horizontal Rule */
-hr {
-    border: none;
-    height: 2px;
-    background-image: linear-gradient(to right, rgba(0, 0, 0, 0), var(--border-light), rgba(0, 0, 0, 0)); /* Soft Grey hr */
-    margin: 60px auto;
-    max-width: 70%;
-    border-radius: 1px;
-}
-
-/* Footer & Skills Section */
-footer {
-<<<<<<< HEAD
-  background-color: #f8f8f8;
-  text-align: center;
-  padding: 1rem;
-  font-size: 0.9rem;
-  color: #888;
-  border-top: 1px solid #ddd;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .skill-boxes {
-    flex-direction: column;
-  }
-
-  .profile-display {
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .profile-info {
-    text-align: center;
-  }
-=======
-    background-color: var(--primary-dark); /* Deep Charcoal Blue */
-    color: var(--text-on-dark);
-    padding: 50px 30px;
-    text-align: center;
-    box-shadow: 0 -4px 8px var(--shadow-soft);
-}
-
-.footer-skills {
-    margin-bottom: 40px;
-}
-
-.footer-skills h3 {
-    color: var(--text-on-dark); /* Off-White heading for skills on dark background */
-    font-size: 2.2rem;
-    margin-bottom: 30px;
-    font-weight: 600;
-}
-
-.skill-columns {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 35px;
-}
-
-.skill-columns > div {
-    flex: 1;
-    min-width: 250px;
-    max-width: 300px;
-    background-color: var(--secondary-dark); /* Slightly Lighter Charcoal Blue for skill cards */
-    padding: 25px;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px var(--shadow-soft);
-    transition: var(--transition-speed);
-}
-
-.skill-columns > div:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 12px 25px var(--shadow-soft);
-}
-
-.skill-columns strong {
-    display: block;
-    font-size: 1.4em;
-    margin-bottom: 15px;
-    color: var(--text-on-dark); /* Light text for category */
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.skill-columns ul {
-    list-style: none;
+.skill-box ul {
+    list-style: none; /* Removes bullet points */
     padding: 0;
-    margin: 0;
 }
 
-.skill-columns ul li {
-    margin-bottom: 10px;
-    color: var(--text-on-dark);
-    font-size: 1.05rem;
+.skill-box li {
+    background: rgba(50, 65, 80, 0.7); /* Background for individual skill items */
+    padding: 0.7rem 1.2rem; /* Padding for skill items */
+    margin-bottom: 0.5rem; /* Space between skill items */
+    border-radius: var(--border-radius-sm); /* Rounded corners */
+    color: var(--primary-text-color); /* Text color for skill items */
+    font-size: 0.95rem; /* Font size for skill items */
+    font-weight: var(--font-weight-medium);
+    transition: transform var(--transition-speed-fast) var(--transition-ease),
+                background-color var(--transition-speed-fast) var(--transition-ease); /* Fast transitions */
+}
+
+.skill-box li:last-child {
+    margin-bottom: 0; /* No bottom margin for the last item */
+}
+
+.skill-box li:hover {
+    transform: translateY(-3px); /* Slight lift effect on hover */
+    background-color: rgba(70, 85, 100, 0.9); /* Darker background on hover */
+}
+
+/* --- Projects Section (index.html) --- */
+.projects-grid {
+    display: grid; /* Uses grid for layout */
+    grid-template-columns: 1fr; /* Single column by default (mobile-first) */
+    gap: var(--spacing-lg); /* Space between project cards */
+    justify-content: center; /* Centers grid items */
+}
+
+.project-card {
+    display: flex; /* Uses flexbox for internal layout */
+    flex-direction: column; /* Stacks content vertically */
+    overflow: hidden; /* Hides overflowing content (e.g., image corners) */
+    text-align: center; /* Centers text within the card */
+    padding: 0; /* No padding on the glass-box itself, content will have padding */
+    /* Inherits glass-box properties */
+    background: var(--glass-bg-color);
+    backdrop-filter: blur(var(--glass-blur-amount));
+    -webkit-backdrop-filter: blur(var(--glass-blur-amount));
+    border-radius: var(--border-radius-lg);
+    border: 1px solid var(--glass-border-color);
+    box-shadow: 0 8px 32px 0 var(--glass-shadow-color);
+    transition: all var(--transition-speed-normal) var(--transition-ease);
+}
+
+.project-card:hover {
+    box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.45);
+    transform: translateY(-5px);
+}
+
+.project-card img {
+    width: 100%; /* Image takes full width of the card */
+    height: 200px; /* Fixed height for project images */
+    object-fit: cover; /* Ensures image covers the area without distortion */
+    border-bottom: 1px solid var(--glass-border-color); /* Separator below image */
+    margin-bottom: var(--spacing-md); /* Space below image */
+}
+
+.project-card h3 {
+    margin-top: 0;
+    margin-bottom: var(--spacing-sm); /* Space below project title */
+    color: var(--accent-color); /* Accent color for project title */
+    padding: 0 var(--spacing-md); /* Horizontal padding for title */
+}
+
+.project-card p {
+    color: var(--secondary-text-color);
+    margin-bottom: var(--spacing-md); /* Space below description */
+    padding: 0 var(--spacing-md); /* Horizontal padding for description */
+}
+
+.project-tags {
+    display: flex; /* Uses flexbox for tags */
+    flex-wrap: wrap; /* Allows tags to wrap to next line */
+    justify-content: center; /* Centers tags horizontally */
+    gap: var(--spacing-xs); /* Space between tags */
+    margin-bottom: var(--spacing-md); /* Space below tags */
+    padding: 0 var(--spacing-md); /* Horizontal padding */
+}
+
+.tag {
+    background-color: rgba(139, 233, 253, 0.1); /* Light accent background for tags */
+    color: var(--accent-color); /* Accent color text for tags */
+    padding: 0.4rem 0.8rem; /* Padding for tags */
+    border-radius: var(--border-radius-pill); /* Pill-shaped tags */
+    font-size: 0.85rem; /* Smaller font size for tags */
+    font-weight: var(--font-weight-medium);
+}
+
+.project-buttons {
+    display: flex; /* Uses flexbox for buttons */
+    justify-content: center; /* Centers buttons horizontally */
+    gap: var(--spacing-sm); /* Space between buttons */
+    margin-top: auto; /* Pushes buttons to the bottom of the card */
+    padding: 0 var(--spacing-md) var(--spacing-md); /* Padding for buttons at the bottom */
+}
+
+.project-btn {
+    padding: 0.8rem 1.5rem; /* Padding for project buttons */
+    border-radius: var(--border-radius-pill); /* Pill-shaped buttons */
+    font-size: 0.95rem; /* Button font size */
+    font-weight: var(--font-weight-semibold);
+    text-decoration: none; /* No underline */
+}
+
+/* --- Let's Connect Button (index.html) --- */
+.lets-connect-wrapper {
+    text-align: center; /* Centers the button */
+    margin: var(--spacing-xl) 0; /* Vertical margin */
+}
+
+.connect-btn {
+    display: inline-block; /* Allows padding and margin */
+    background-color: var(--accent-color); /* Accent color background */
+    color: var(--background-color); /* Dark text on accent background */
+    padding: 1.2rem 3rem; /* Generous padding */
+    border-radius: var(--border-radius-pill); /* Pill-shaped */
+    font-size: 1.2rem; /* Larger font size */
+    font-weight: var(--font-weight-bold);
+    text-transform: uppercase; /* Uppercase text */
+    letter-spacing: 0.08em; /* Letter spacing */
+    box-shadow: 0 8px 20px rgba(139, 233, 253, 0.4); /* Prominent shadow */
+    transition: all var(--transition-speed-normal) var(--transition-ease); /* Smooth transitions */
+    text-decoration: none; /* No underline */
+}
+
+.connect-btn:hover {
+    background-color: #61dafb; /* Lighter accent on hover */
+    transform: translateY(-5px); /* Significant lift effect */
+    box-shadow: 0 12px 30px rgba(139, 233, 253, 0.6); /* Enhanced shadow */
+}
+
+.connect-btn:active {
+    transform: translateY(0); /* Resets on click */
+    box-shadow: 0 3px 10px rgba(139, 233, 253, 0.3); /* Subtle shadow */
+}
+
+/* =============================================================================
+ * 3. FOOTER STYLES (COMMON TO ALL PAGES)
+ * =============================================================================
+ */
+
+footer {
+    background: var(--glass-bg-color); /* Glass background */
+    backdrop-filter: blur(10px); /* Blur effect */
+    -webkit-backdrop-filter: blur(10px);
+    border-top: 1px solid var(--glass-border-color); /* Top border */
+    padding: var(--spacing-md) var(--spacing-sm); /* Padding */
+    text-align: center; /* Centers text */
+    margin-top: var(--spacing-xl); /* Space above footer */
+    color: var(--secondary-text-color); /* Muted text color */
+    font-size: 0.9rem; /* Smaller font size */
+    display: flex; /* Uses flexbox for internal layout */
+    flex-direction: column; /* Stacks items vertically */
+    align-items: center; /* Centers items horizontally */
+    gap: var(--spacing-sm); /* Space between links and copyright */
 }
 
 .footer-links {
-    margin-top: 40px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1); /* Subtle white border for separation */
-    padding-top: 40px;
-}
-
-.connect-header {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 30px;
-    margin-bottom: 25px;
-}
-
-.connect-header h3 {
-    color: var(--text-on-dark); /* Off-White heading for "Let's Connect" */
-    font-size: 2.2rem;
-    margin: 0;
-    font-weight: 600;
-}
-
-.contact-button {
-    background-color: var(--accent-blue); /* Keep button blue */
-    color: black; /* Change text color to black */
-    padding: 14px 28px;
-    border: none;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: bold;
-    font-size: 1.1rem;
-    transition: var(--transition-speed);
-    box-shadow: 0 4px 8px var(--shadow-soft);
-}
-
-.contact-button:hover {
-    background-color: #2980b9; /* Darker blue on hover */
-    color: white; /* Change text to white on hover for contrast */
-    transform: translateY(-3px);
-    box-shadow: 0 6px 12px var(--shadow-soft);
-}
-
-.footer-links p {
-    margin-bottom: 12px;
-    font-size: 1.05rem;
-    color: var(--text-on-dark);
+    display: flex; /* Uses flexbox for links */
+    flex-wrap: wrap; /* Allows links to wrap */
+    justify-content: center; /* Centers links */
+    gap: var(--spacing-md); /* Space between links */
+    margin-bottom: var(--spacing-sm); /* Space below links */
 }
 
 .footer-links a {
-    color: var(--accent-blue); /* Vibrant Blue for links */
-    text-decoration: none;
-    transition: var(--transition-speed);
+    display: flex; /* Uses flexbox for icon and text */
+    align-items: center; /* Vertically aligns icon and text */
+    gap: 0.5rem; /* Space between icon and text */
+    color: var(--secondary-text-color); /* Link color */
+    font-weight: var(--font-weight-regular);
+    transition: color var(--transition-speed-normal) var(--transition-ease),
+                transform var(--transition-speed-normal) var(--transition-ease); /* Smooth transitions */
+    text-decoration: none; /* No underline */
 }
 
 .footer-links a:hover {
-    text-decoration: underline;
-    color: #2980b9; /* Darker blue on hover */
+    color: var(--accent-color); /* Accent color on hover */
+    transform: translateY(-3px); /* Slight lift effect */
 }
 
-/* --- Form Page Specific Styles (consistent with index.html sections) --- */
-.form-page-container {
-    background-color: var(--background-light); /* Very Light Grey background */
-    padding: 45px;
-    border-radius: 12px;
-    box-shadow: 0 8px 20px var(--shadow-soft);
-    width: 100%;
-    max-width: 600px;
-    margin: 40px auto;
-    text-align: center;
+.footer-links .icon {
+    width: 24px; /* Icon size */
+    height: 24px; /* Icon size */
+    filter: grayscale(100%) brightness(200%); /* Makes icons white/bright on dark background */
+    transition: filter var(--transition-speed-normal) var(--transition-ease); /* Smooth filter transition */
 }
-.form-page-container h1 {
-    color: var(--primary-dark); /* Deep Charcoal Blue for heading */
-    font-size: 2.5rem;
-    margin-bottom: 35px;
-    font-weight: 600;
-    position: relative;
-    padding-bottom: 10px;
-    display: inline-block;
+
+.footer-links a:hover .icon {
+    filter: grayscale(0%) brightness(100%); /* Colors icons on hover */
 }
-.form-page-container h1::after {
-    content: '';
-    position: absolute;
-    width: 80px;
-    height: 4px;
-    background: var(--accent-blue); /* Vibrant Blue underline */
-    left: 50%;
-    transform: translateX(-50%);
-    bottom: 0;
-    border-radius: 2px;
+
+/* =============================================================================
+ * 4. FORM.HTML (CONTACT FORM PAGE) STYLES
+ * =============================================================================
+ */
+
+/* Form Container - Applies the glass effect */
+.form-container {
+    max-width: 600px; /* Max width for the form box */
+    margin: var(--spacing-xl) auto; /* Centers horizontally, adds vertical space */
+    padding: var(--spacing-xl); /* Generous padding inside the form box */
+    text-align: center; /* Centers text within the container */
+
+    /* Inherits glass-box properties */
+    background: var(--glass-bg-color);
+    backdrop-filter: blur(var(--glass-blur-amount));
+    -webkit-backdrop-filter: blur(var(--glass-blur-amount));
+    border-radius: var(--border-radius-lg);
+    border: 1px solid var(--glass-border-color);
+    box-shadow: 0 8px 35px var(--glass-shadow-color);
+    
+    transition: transform var(--transition-speed-normal) var(--transition-ease),
+                box-shadow var(--transition-speed-normal) var(--transition-ease),
+                background var(--transition-speed-normal) var(--transition-ease),
+                border var(--transition-speed-normal) var(--transition-ease);
 }
+
+.form-container:hover {
+    transform: translateY(-5px); /* Slight lift on hover */
+    box-shadow: 0 12px 45px rgba(0, 0, 0, 0.5); /* Enhanced shadow on hover */
+    background: rgba(30, 45, 60, 0.88); /* Slightly less transparent on hover */
+    border: 1px solid rgba(60, 75, 90, 0.7); /* Adjusted border on hover */
+}
+
+.form-container h1 {
+    font-family: var(--font-outfit), sans-serif; /* Form heading font */
+    font-size: 2.6rem; /* Form heading size */
+    font-weight: var(--font-weight-bold);
+    color: var(--primary-text-color);
+    margin-bottom: var(--spacing-lg); /* Space below heading */
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* Form Grid Layout */
+.form-container form {
+    display: grid; /* Uses grid for form fields */
+    grid-template-columns: 1fr 1fr; /* Two columns for desktop */
+    gap: var(--spacing-md) var(--spacing-lg); /* Vertical and horizontal gap */
+    align-items: end; /* Aligns labels to the bottom of their grid cell */
+}
+
+/* Form Group (Label + Input) */
 .form-group {
-    margin-bottom: 25px;
+    display: flex; /* Uses flexbox for label and input */
+    flex-direction: column; /* Stacks label above input */
+    text-align: left; /* Aligns text left within the group */
+}
+
+.form-group.full-width {
+    grid-column: 1 / -1; /* Makes element span all columns */
+}
+
+.form-container form label {
+    display: block; /* Ensures label takes full width */
+    margin-bottom: 0.5rem; /* Space below label */
+    font-weight: var(--font-weight-medium);
+    color: var(--primary-text-color);
+    font-size: 1rem;
+    opacity: 0.9; /* Slightly transparent */
+    font-family: var(--font-inter), sans-serif;
+}
+
+/* Input and Textarea Styling */
+.form-container form input[type="text"],
+.form-container form input[type="email"],
+.form-container form input[type="tel"],
+.form-container form textarea {
+    width: 100%; /* Full width of its container */
+    padding: 1rem; /* Padding inside input fields */
+    border: 1px solid rgba(139, 233, 253, 0.25); /* Subtle border */
+    border-radius: var(--border-radius-sm); /* Rounded corners */
+    font-size: 1rem; /* Input text size */
+    background-color: rgba(60, 75, 90, 0.5); /* Semi-transparent dark background */
+    color: var(--primary-text-color); /* Input text color */
+    outline: none; /* Removes default outline on focus */
+    transition: all var(--transition-speed-normal) var(--transition-ease); /* Smooth transitions */
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2); /* Inner shadow for depth */
+    font-family: var(--font-inter), sans-serif;
+}
+
+.form-container form input[type="text"]::placeholder,
+.form-container form input[type="email"]::placeholder,
+.form-container form input[type="tel"]::placeholder,
+.form-container form textarea::placeholder {
+    color: #a0a0a0; /* Placeholder text color */
+    opacity: 0.7; /* Slightly transparent placeholder */
+    font-family: var(--font-inter), sans-serif;
+}
+
+.form-container form input[type="text"]:focus,
+.form-container form input[type="email"]:focus,
+.form-container form input[type="tel"]:focus,
+.form-container form textarea:focus {
+    border-color: var(--accent-color); /* Accent border on focus */
+    background-color: rgba(60, 75, 90, 0.7); /* Slightly darker background on focus */
+    box-shadow: 0 0 0 4px rgba(139, 233, 253, 0.2); /* Outer shadow on focus */
+}
+
+.form-container form textarea {
+    resize: vertical; /* Allows vertical resizing */
+    min-height: 120px; /* Minimum height for textarea */
+}
+
+/* Submit Button Styling */
+.form-container form button[type="submit"] {
+    grid-column: 1 / -1; /* Spans all columns */
+    background: var(--accent-color); /* Accent background */
+    color: #1a232e; /* Dark text */
+    border: none; /* No border */
+    padding: 1rem 2.5rem; /* Padding */
+    font-size: 1.15rem; /* Font size */
+    font-weight: var(--font-weight-semibold);
+    border-radius: var(--border-radius-pill); /* Pill shape */
+    cursor: pointer; /* Pointer cursor */
+    margin-top: var(--spacing-md); /* Space above button */
+    transition: background var(--transition-speed-normal) var(--transition-ease),
+                transform var(--transition-speed-fast) var(--transition-ease),
+                box-shadow var(--transition-speed-normal) var(--transition-ease);
+    box-shadow: 0 6px 18px rgba(139, 233, 253, 0.4); /* Shadow */
+    font-family: var(--font-poppins), sans-serif;
+}
+
+.form-container form button[type="submit"]:hover {
+    background: #61dafb; /* Lighter accent on hover */
+    transform: translateY(-3px); /* Lift effect */
+    box-shadow: 0 8px 25px rgba(139, 233, 253, 0.6); /* Enhanced shadow */
+}
+
+.form-container form button[type="submit"]:active {
+    transform: translateY(0); /* Resets on click */
+    box-shadow: 0 3px 10px rgba(139, 233, 253, 0.3); /* Subtle shadow */
+}
+
+/* Response Message (for success/error) */
+#responseMessage {
+    grid-column: 1 / -1; /* Spans all columns */
+    margin-top: var(--spacing-md); /* Space above message */
+    font-size: 0.95rem;
+    font-weight: var(--font-weight-medium);
+    text-align: center;
+    color: var(--primary-text-color); /* Default text color */
+    font-family: var(--font-inter), sans-serif;
+}
+
+#responseMessage.success {
+    color: var(--success-color); /* Green for success */
+}
+
+#responseMessage.error {
+    color: var(--danger-color); /* Red for error */
+}
+
+/* --- Back to Home Button (Specific for form page and other secondary pages) --- */
+.back-home-btn {
+    display: inline-block; /* Allows padding and margin */
+    margin-top: var(--spacing-lg); /* Space from form */
+    padding: 0.8rem 1.8rem; /* Padding */
+    background-color: rgba(60, 75, 90, 0.4); /* Semi-transparent dark background */
+    color: var(--primary-text-color); /* Text color */
+    text-decoration: none; /* No underline */
+    border-radius: var(--border-radius-pill); /* Pill shape */
+    font-size: 0.95rem;
+    font-weight: var(--font-weight-medium);
+    border: 1px solid rgba(139, 233, 253, 0.2); /* Subtle border */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Shadow */
+    backdrop-filter: blur(10px); /* Blur effect */
+    -webkit-backdrop-filter: blur(10px);
+    transition: background-color var(--transition-speed-normal) var(--transition-ease),
+                color var(--transition-speed-normal) var(--transition-ease),
+                border-color var(--transition-speed-normal) var(--transition-ease),
+                transform var(--transition-speed-fast) var(--transition-ease),
+                box-shadow var(--transition-speed-fast) var(--transition-ease);
+    font-family: var(--font-poppins), sans-serif;
+}
+
+.back-home-btn:hover {
+    background-color: rgba(80, 95, 110, 0.5); /* Darker background on hover */
+    color: var(--accent-color); /* Accent color text on hover */
+    border-color: rgba(139, 233, 253, 0.4); /* Accent border on hover */
+    transform: translateY(-2px); /* Lift effect */
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4); /* Enhanced shadow */
+}
+
+.back-home-btn:active {
+    transform: translateY(0); /* Resets on click */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+}
+
+/* =============================================================================
+ * 5. THANKYOU.HTML (THANK YOU PAGE) STYLES
+ * =============================================================================
+ */
+
+.thank-you-container {
+    max-width: 550px; /* Max width for the thank you message */
+    margin: 6rem auto; /* Centers horizontally, adds vertical space */
+    padding: var(--spacing-xl); /* Generous padding */
+    text-align: center;
+    display: flex; /* Uses flexbox for content alignment */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px; /* Ensures a decent height for the container */
+    
+    /* Inherits glass-box properties */
+    background: var(--glass-bg-color);
+    backdrop-filter: blur(var(--glass-blur-amount));
+    -webkit-backdrop-filter: blur(var(--glass-blur-amount));
+    border-radius: var(--border-radius-lg);
+    border: 1px solid var(--glass-border-color);
+    box-shadow: 0 8px 35px var(--glass-shadow-color);
+    
+    /* Animation for the container itself */
+    animation: fadeIn var(--transition-speed-normal) var(--transition-ease) forwards;
+}
+
+/* Icon Styling for Thank You Page */
+.icon-wrapper {
+    margin-bottom: var(--spacing-md);
+    font-size: 5rem; /* Large icon size */
+    color: var(--success-color); /* Success green color */
+    position: relative; /* For animation positioning */
+}
+
+.animated-icon {
+    opacity: 0; /* Hidden initially */
+    transform: scale(0.5); /* Smaller initially */
+    animation: scaleIn 0.6s ease-out 0.3s forwards, /* Scale in animation */
+               pulseGreen 1.5s infinite alternate 1s; /* Pulsing animation */
+}
+
+/* Thank You Heading */
+.thank-you-container h1 {
+    font-size: 3.5rem; /* Large and prominent heading */
+    font-weight: var(--font-weight-bold);
+    color: var(--primary-text-color);
+    margin-bottom: var(--spacing-sm);
+    text-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+/* Thank You Paragraphs */
+.thank-you-container p {
+    font-size: 1.1rem; /* Readable text size */
+    color: var(--secondary-text-color);
+    margin-bottom: 0.8rem;
+    max-width: 85%; /* Prevents text from being too wide */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.thank-you-container p:last-of-type {
+    margin-bottom: var(--spacing-xl); /* Space before the button */
+}
+
+/* Animations for text elements on Thank You Page */
+.animated-text {
+    opacity: 0; /* Hidden initially */
+    transform: translateY(20px); /* Slightly below initial position */
+    animation: slideUpFadeIn 0.8s ease-out forwards; /* Slide up and fade in */
+}
+
+.thank-you-container h1.animated-text {
+    animation-delay: 0.6s; /* Delay for heading animation */
+}
+
+.thank-you-container p.animated-text:nth-of-type(1) {
+    animation-delay: 0.8s; /* Delay for first paragraph */
+}
+
+.thank-you-container p.animated-text:nth-of-type(2) {
+    animation-delay: 1s; /* Delay for second paragraph */
+}
+
+/* Back to Home Button on Thank You Page */
+.thank-you-container .back-home-btn {
+    animation: fadeIn 0.8s ease-out 1.2s forwards; /* Fade in animation for button */
+}
+
+/* Keyframe Animations (Common) */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUpFadeIn {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scaleIn {
+    from { opacity: 0; transform: scale(0.5); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes pulseGreen {
+    0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(139, 233, 253, 0.4); } /* Use accent color for pulse */
+    70% { transform: scale(1.05); box-shadow: 0 0 0 20px rgba(139, 233, 253, 0); }
+    100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(139, 233, 253, 0); }
+}
+
+/* =============================================================================
+ * 6. ADMIN.HTML (ADMIN LOGIN PAGE) STYLES
+ * =============================================================================
+ */
+
+.admin-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Make it full viewport height */
+    padding: var(--spacing-lg) var(--spacing-sm); /* Responsive padding */
+    text-align: center; /* Center content within the container */
+}
+
+.admin-login-box {
+    max-width: 450px; /* Max width for the login box */
+    width: 100%; /* Take full width on small screens */
+    padding: var(--spacing-xl); /* Generous padding */
+    text-align: center;
+
+    /* Inherits glass-box properties */
+    background: var(--glass-bg-color);
+    backdrop-filter: blur(var(--glass-blur-amount));
+    -webkit-backdrop-filter: blur(var(--glass-blur-amount));
+    border-radius: var(--border-radius-lg);
+    border: 1px solid var(--glass-border-color);
+    box-shadow: 0 8px 35px var(--glass-shadow-color);
+
+    transition: transform var(--transition-speed-normal) var(--transition-ease),
+                box-shadow var(--transition-speed-normal) var(--transition-ease),
+                background var(--transition-speed-normal) var(--transition-ease), /* Added for hover effect */
+                border var(--transition-speed-normal) var(--transition-ease); /* Added for hover effect */
+}
+
+.admin-login-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 45px rgba(0, 0, 0, 0.5);
+    background: rgba(30, 45, 60, 0.88); /* Added for consistency with form-container */
+    border: 1px solid rgba(60, 75, 90, 0.7); /* Added for consistency with form-container */
+}
+
+.admin-login-box h1 {
+    font-family: var(--font-outfit), sans-serif;
+    font-size: 2.5rem;
+    font-weight: var(--font-weight-bold);
+    color: var(--primary-text-color);
+    margin-bottom: var(--spacing-xl);
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.admin-login-box form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md); /* Space between form groups */
+}
+
+.admin-form-group {
     text-align: left;
 }
-.form-group label {
+
+.admin-form-group label {
     display: block;
-    margin-bottom: 10px;
-    font-weight: 600;
-    color: var(--text-on-light);
-    font-size: 1.05rem;
+    margin-bottom: 0.6rem;
+    font-weight: var(--font-weight-medium);
+    color: var(--primary-text-color);
+    font-size: 1rem;
+    font-family: var(--font-inter), sans-serif;
 }
-.form-group input[type="text"],
-.form-group input[type="email"],
-.form-group textarea {
-    width: calc(100% - 28px);
-    padding: 14px;
-    border: 1px solid var(--border-light); /* Soft Grey border */
-    border-radius: 6px;
-    font-size: 17px;
-    box-sizing: border-box;
-    transition: var(--transition-speed);
-    color: var(--text-on-light);
-    background-color: white; /* Explicitly white for inputs */
-}
-.form-group input[type="text"]:focus,
-.form-group input[type="email"]:focus,
-.form-group textarea:focus {
-    border-color: var(--accent-blue); /* Vibrant Blue focus border */
-    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.25); /* Vibrant Blue glow */
-    outline: none;
-}
-.form-group textarea {
-    min-height: 150px;
-    resize: vertical;
-}
-button[type="submit"] {
-    background-color: var(--accent-blue); /* Vibrant Blue button */
-    color: white;
-    padding: 16px 30px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 1.25rem;
+
+/*
+ * IMPORTANT: These input styles for admin login are designed to match
+ * the form inputs on form.html. They already include the glassmorphism
+ * effects, borders, shadows, and focus states.
+ * If you are still seeing a difference, it is likely a caching issue
+ * or a local override.
+ */
+.admin-login-box input[type="text"],
+.admin-login-box input[type="password"],
+.admin-login-box input[type="email"] { /* ADDED input[type="email"] HERE */
     width: 100%;
-    transition: var(--transition-speed);
-    font-weight: 600;
-    box-shadow: 0 4px 10px var(--shadow-soft);
-}
-button[type="submit"]:hover {
-    background-color: #2980b9; /* Darker blue on hover */
-    transform: translateY(-3px);
-    box-shadow: 0 6px 15px var(--shadow-soft);
-}
-#responseMessage {
-    margin-top: 30px;
-    padding: 18px;
-    border-radius: 8px;
-    font-size: 1.1rem;
-    text-align: center;
-    visibility: hidden;
-    opacity: 0;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
-}
-#responseMessage.show {
-    visibility: visible;
-    opacity: 1;
-}
-#responseMessage.success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; } /* Light Green */
-#responseMessage.error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; } /* Light Red */
-.back-link-wrapper {
-    margin-top: 25px;
-}
-.back-link {
-    font-size: 1.1rem;
-    color: var(--accent-blue); /* Vibrant Blue for links */
-    text-decoration: none;
-    transition: var(--transition-speed);
-}
-.back-link:hover {
-    text-decoration: underline;
-    color: #2980b9; /* Darker blue on hover */
+    padding: 1rem;
+    border: 1px solid rgba(139, 233, 253, 0.25); /* Subtle border */
+    border-radius: var(--border-radius-sm); /* Rounded corners */
+    font-size: 1rem;
+    background-color: rgba(60, 75, 90, 0.5); /* Semi-transparent dark background */
+    color: var(--primary-text-color); /* Input text color */
+    outline: none; /* Removes default outline on focus */
+    transition: all var(--transition-speed-normal) var(--transition-ease); /* Smooth transitions */
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2); /* Inner shadow for depth */
+    font-family: var(--font-inter), sans-serif;
 }
 
-/* --- Thank You Page Specific Styles (consistent with index.html sections) --- */
-.thank-you-container {
-    background-color: var(--background-light); /* Very Light Grey background */
-    padding: 60px;
-    border-radius: 10px;
-    box-shadow: 0 8px 25px var(--shadow-soft);
-    max-width: 650px;
-    width: 90%;
-    margin: 60px auto;
-    text-align: center;
+.admin-login-box input[type="text"]::placeholder,
+.admin-login-box input[type="password"]::placeholder,
+.admin-login-box input[type="email"]::placeholder { /* ADDED input[type="email"] HERE */
+    color: #a0a0a0; /* Placeholder text color */
+    opacity: 0.7; /* Slightly transparent placeholder */
+    font-family: var(--font-inter), sans-serif;
 }
-.thank-you-container h1 {
-    color: var(--primary-dark); /* Deep Charcoal Blue for heading */
-    font-size: 3.5em;
-    margin-bottom: 25px;
-    font-weight: 600;
-    position: relative;
-    padding-bottom: 10px;
-    display: inline-block;
+
+.admin-login-box input[type="text"]:focus,
+.admin-login-box input[type="password"]:focus,
+.admin-login-box input[type="email"]:focus { /* ADDED input[type="email"] HERE */
+    border-color: var(--accent-color); /* Accent border on focus */
+    background-color: rgba(60, 75, 90, 0.7); /* Slightly darker background on focus */
+    box-shadow: 0 0 0 4px rgba(139, 233, 253, 0.2); /* Outer shadow on focus */
 }
-.thank-you-container h1::after {
-    content: '';
-    position: absolute;
-    width: 80px;
-    height: 4px;
-    background: var(--accent-blue); /* Vibrant Blue underline */
-    left: 50%;
-    transform: translateX(-50%);
-    bottom: 0;
-    border-radius: 2px;
-}
-.thank-you-container p {
-    font-size: 1.3em;
-    color: var(--text-on-light);
-    margin-bottom: 35px;
-}
-.thank-you-container .redirect-message {
-    font-style: italic;
-    color: var(--secondary-dark); /* Use secondary dark for softer message */
-    font-size: 1.1em;
-    margin-bottom: 20px;
-}
-.thank-you-container a {
-    display: inline-block;
-    background-color: var(--accent-blue); /* Vibrant Blue button */
-    color: white;
-    padding: 15px 30px;
-    border-radius: 8px;
+
+.admin-login-box button[type="submit"] {
+    background: var(--accent-color);
+    color: #1a232e;
+    border: none;
+    padding: 1rem 2.5rem;
     font-size: 1.15rem;
-    box-shadow: 0 4px 10px var(--shadow-soft);
-    transition: var(--transition-speed);
+    font-weight: var(--font-weight-semibold);
+    border-radius: var(--border-radius-pill);
+    cursor: pointer;
+    margin-top: var(--spacing-md);
+    transition: background var(--transition-speed-normal) var(--transition-ease),
+                transform var(--transition-speed-fast) var(--transition-ease),
+                box-shadow var(--transition-speed-normal) var(--transition-ease);
+    box-shadow: 0 6px 18px rgba(139, 233, 253, 0.4);
+    font-family: var(--font-poppins), sans-serif;
 }
-.thank-you-container a:hover {
-    background-color: #2980b9; /* Darker blue on hover */
+
+.admin-login-box button[type="submit"]:hover {
+    background: #61dafb;
     transform: translateY(-3px);
-    box-shadow: 0 6px 15px var(--shadow-soft);
+    box-shadow: 0 8px 25px rgba(139, 233, 253, 0.6);
+}
+
+.admin-login-box button[type="submit"]:active {
+    transform: translateY(0);
+    box-shadow: 0 3px 10px rgba(139, 233, 253, 0.3);
+}
+
+/* Error message for login */
+.admin-login-box .error-message {
+    font-size: 0.9rem;
+    margin-top: var(--spacing-sm);
+}
+
+/* Reusing .back-home-btn from other pages */
+.admin-login-box .back-home-btn {
+    margin-top: var(--spacing-lg);
+}
+
+/* =============================================================================
+ * 7. ADMIN-PANEL.HTML (ADMIN DASHBOARD) STYLES
+ * =============================================================================
+ */
+
+/* Admin Header */
+.admin-main-header {
+    display: flex; /* Ensure flex for alignment */
+    justify-content: center; /* Center content horizontally */
+    background: rgba(29, 44, 60, 0.95); /* Darker, slightly opaque background */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 1rem var(--spacing-md); /* Adjusted padding for better default */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5); /* Stronger shadow */
+    position: sticky; /* Makes header stick to top */
+    top: 0;
+    z-index: 999; /* Ensure it's above other content */
+    border-bottom: 1px solid rgba(139, 233, 253, 0.1); /* Subtle bottom border */
+}
+
+.admin-main-header .header-content-wrapper {
+    display: flex;
+    justify-content: space-between; /* Space out title and nav */
+    align-items: center;
+    max-width: 1400px; /* Match main content width */
+    width: 100%; /* Ensure it takes full width of its container */
+    flex-wrap: nowrap; /* Prevent title/nav from wrapping on desktop */
+    gap: 1rem; /* Space between title and nav */
+}
+
+.admin-header-title {
+    font-family: var(--font-outfit), sans-serif;
+    font-size: 2.5rem; /* Slightly larger title */
+    color: var(--accent-color); /* Use your accent color */
+    margin: 0;
+    text-shadow: 0 3px 6px rgba(0, 0, 0, 0.4); /* More prominent shadow */
+    letter-spacing: 0.05em; /* A little spacing for style */
+    flex-shrink: 0; /* Prevent title from shrinking */
+}
+
+/* Admin Menu Icon (for mobile) */
+.admin-menu-icon-dots {
+    cursor: pointer;
+    font-size: 2rem;
+    color: var(--primary-text-color);
+    padding: 0.5rem;
+    border-radius: var(--border-radius-sm);
+    transition: background-color var(--transition-speed-normal) var(--transition-ease);
+    display: block; /* Always visible now */
+    z-index: 1001; /* Ensure it's above the dropdown */
+}
+
+.admin-menu-icon-dots:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Admin Dropdown Menu (hidden by default, shown on mobile) */
+.admin-dropdown-menu {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex; /* Default to flex for internal stacking */
+    flex-direction: column; /* Stack links vertically */
+    position: absolute; /* Position relative to .admin-main-header */
+    top: 100%; /* Position below the header */
+    right: var(--spacing-md); /* Align to right edge */
+    background: rgba(29, 44, 60, 0.98); /* Darker background for dropdown */
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    width: 180px; /* Fixed width for dropdown */
+    border-radius: var(--border-radius-sm);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(139, 233, 253, 0.2);
+    padding: 0.5rem 0; /* Adjusted padding */
+    opacity: 0; /* Hidden initially */
+    transform: translateY(-10px); /* Slight initial offset */
+    transition: opacity 0.3s ease, transform 0.3s ease; /* Smooth animation */
+    z-index: 990; /* Lower than menu-icon-dots, higher than content */
+    pointer-events: none; /* Prevents interaction when hidden */
+}
+
+.admin-dropdown-menu.active {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: all; /* Allows interaction when active */
+}
+.admin-dropdown-menu li {
+    width: 100%; /* Full width list items */
+}
+.admin-dropdown-menu li a {
+    padding: 0.6rem 1rem; /* Adjusted link padding */
+    width: calc(100% - 2rem); /* Account for padding */
+    display: block; /* Make links block level */
+    text-align: left; /* Align text left */
+    border-radius: 0; /* No rounded corners inside dropdown */
+    font-size: 1rem; /* Adjusted font size */
+    color: var(--primary-text-color); /* Link color */
+    text-decoration: none;
+    transition: all var(--transition-speed-normal) var(--transition-ease);
+}
+.admin-dropdown-menu li a:hover {
+    background-color: rgba(139, 233, 253, 0.1);
+    transform: none; /* No lift effect in dropdown */
+    box-shadow: none;
+    color: var(--accent-color);
 }
 
 
-/* Responsive Design */
-@media (max-width: 992px) {
-    section, .form-page-container, .thank-you-container {
-        margin: 20px 15px;
-        padding: 40px 25px;
-    }
-    .profile-display {
-        padding: 30px 15px;
-        gap: 20px;
-    }
+/* Style for the Logout button specifically */
+.admin-logout-btn {
+    background-color: var(--danger-color); /* Use danger color for logout */
+    color: #ffffff; /* Text color for danger button */
+    border: 1px solid var(--danger-color);
+    padding: 0.7rem 1.5rem; /* Slightly more padding for button feel */
+    border-radius: var(--border-radius-pill); /* More rounded */
+    box-shadow: 0 4px 15px rgba(239, 83, 80, 0.4);
+    font-weight: var(--font-weight-semibold); /* Make logout text bolder */
 }
 
-@media (max-width: 768px) {
-    header h1 {
-        font-size: 2.2rem;
+.admin-logout-btn:hover {
+    background-color: var(--danger-hover); /* Darker red on hover */
+    border-color: var(--danger-hover);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(239, 83, 80, 0.6);
+}
+
+/* Optional: Active link styling (requires JS to add/remove 'active' class) */
+.admin-nav-link.active {
+    background-color: rgba(139, 233, 253, 0.25); /* Stronger active background */
+    color: var(--accent-color);
+    border-color: var(--accent-color);
+    font-weight: var(--font-weight-semibold);
+    box-shadow: 0 2px 10px rgba(139, 233, 253, 0.3);
+}
+
+/* Dashboard Summary Cards */
+.dashboard-summary {
+    padding: var(--spacing-xl);
+    margin-bottom: var(--spacing-xl);
+}
+
+.dashboard-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-lg);
+    justify-content: center;
+}
+
+.dashboard-card {
+    text-align: center;
+    padding: var(--spacing-md);
+    /* Inherits glass-box properties */
+    background: var(--glass-bg-color);
+    backdrop-filter: blur(var(--glass-blur-amount));
+    -webkit-backdrop-filter: blur(var(--glass-blur-amount));
+    border-radius: var(--border-radius-lg);
+    border: 1px solid var(--glass-border-color);
+    box-shadow: 0 8px 32px 0 var(--glass-shadow-color);
+    transition: all var(--transition-speed-normal) var(--transition-ease);
+}
+
+.dashboard-card:hover {
+    box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.45);
+    transform: translateY(-3px);
+}
+
+.dashboard-card h3 {
+    color: var(--accent-color);
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.card-metric {
+    font-size: 3rem;
+    font-weight: var(--font-weight-bold);
+    color: var(--primary-text-color);
+    margin-bottom: var(--spacing-sm);
+}
+
+.card-link {
+    font-size: 0.95rem;
+    color: var(--secondary-text-color);
+    transition: color var(--transition-speed-normal) var(--transition-ease);
+}
+
+.card-link:hover {
+    color: var(--accent-color);
+    text-decoration: underline;
+}
+
+.admin-actions {
+    display: flex;
+    flex-wrap: wrap; /* Allow buttons to wrap to next line */
+    justify-content: center;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-lg);
+}
+
+/* Form Submissions Table Section */
+.form-submissions-section {
+    padding: var(--spacing-xl);
+    margin-bottom: var(--spacing-xl);
+}
+
+.form-submissions-actions {
+    display: flex;
+    flex-wrap: wrap; /* Allow items to wrap */
+    gap: var(--spacing-md);
+    align-items: center;
+    margin-bottom: var(--spacing-lg);
+    padding: var(--spacing-md);
+    background: rgba(29, 44, 60, 0.6); /* Slightly lighter glassmorphism for this section */
+    border-radius: var(--border-radius-md);
+    border: 1px solid rgba(139, 233, 253, 0.1);
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.filter-group {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    flex-wrap: wrap; /* Allow label/select to wrap if needed */
+}
+
+.filter-group label,
+.custom-date-range label {
+    color: var(--primary-text-color);
+    font-weight: var(--font-weight-medium);
+    font-size: 1rem;
+    white-space: nowrap;
+}
+
+.styled-select,
+.styled-date-input {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(139, 233, 253, 0.3);
+    border-radius: var(--border-radius-sm);
+    padding: 0.7rem 1rem;
+    color: var(--primary-text-color);
+    font-family: var(--font-inter), sans-serif;
+    font-size: 1rem;
+    transition: all var(--transition-speed-normal) var(--transition-ease);
+    outline: none;
+    flex-grow: 1; /* Allows inputs to grow */
+    min-width: 120px; /* Ensures they don't get too small */
+}
+
+.styled-select:focus,
+.styled-date-input:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 4px rgba(139, 233, 253, 0.2); /* Increased blur for focus */
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.custom-date-range {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap; /* Allow elements to wrap */
+}
+
+.styled-date-input::-webkit-calendar-picker-indicator {
+    filter: invert(1); /* Makes the calendar icon white/visible on dark background */
+    cursor: pointer;
+}
+
+.messages-table-wrapper {
+    overflow-x: auto; /* Enables horizontal scrolling for table on small screens */
+    width: 100%; /* Ensures wrapper takes full width */
+    /* Add a max-width to the wrapper itself to ensure it respects parent's width */
+    max-width: 100%;
+    -webkit-overflow-scrolling: touch; /* For smoother scrolling on iOS */
+}
+
+.messages-table {
+    width: 100%; /* Table itself should take 100% of its wrapper */
+    border-collapse: collapse;
+    margin-top: var(--spacing-md);
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: var(--border-radius-md);
+    overflow: hidden; /* For rounded corners on table */
+    min-width: 700px; /* Ensures table doesn't shrink too much, allowing scroll */
+}
+
+.messages-table th,
+.messages-table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid rgba(139, 233, 253, 0.1);
+}
+
+.messages-table th {
+    background-color: rgba(139, 233, 253, 0.1);
+    color: var(--accent-color);
+    font-weight: var(--font-weight-semibold);
+    text-transform: uppercase;
+    font-size: 0.9rem;
+}
+
+.messages-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.messages-table tbody tr:hover {
+    background-color: rgba(139, 233, 253, 0.05);
+}
+
+.messages-table .action-btn {
+    padding: 0.5rem 0.8rem;
+    font-size: 0.85rem;
+    border-radius: 5px;
+}
+
+.data-note {
+    text-align: center;
+    margin-top: var(--spacing-sm);
+    font-size: 0.9rem;
+    color: var(--secondary-text-color);
+}
+
+/* Admin Settings Section */
+.admin-settings-section {
+    padding: var(--spacing-xl);
+    margin-bottom: var(--spacing-xl);
+}
+
+.change-password-form-wrapper {
+    margin-bottom: var(--spacing-lg);
+    padding: var(--spacing-lg);
+    /* Inherits glass-box properties */
+    background: var(--glass-bg-color);
+    backdrop-filter: blur(var(--glass-blur-amount));
+    -webkit-backdrop-filter: blur(var(--glass-blur-amount));
+    border-radius: var(--border-radius-lg);
+    border: 1px solid var(--glass-border-color);
+    box-shadow: 0 8px 32px 0 var(--glass-shadow-color);
+}
+
+.change-password-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.other-settings {
+    margin-top: var(--spacing-lg);
+    padding: var(--spacing-lg);
+    background: var(--glass-bg-color);
+    border-radius: var(--border-radius-lg);
+    border: 1px solid var(--glass-border-color);
+    box-shadow: 0 8px 32px 0 var(--glass-shadow-color);
+    text-align: center;
+}
+
+.other-settings ul {
+    list-style: none;
+    padding: 0;
+    margin: var(--spacing-sm) 0;
+    color: var(--secondary-text-color);
+}
+
+.other-settings li {
+    margin-bottom: 0.5rem;
+}
+
+/* =============================================================================
+ * 8. MEDIA QUERIES FOR RESPONSIVENESS
+ * - Mobile-first approach: Default styles are for mobile.
+ * - Adjustments for Tablet (768px - 1023px) and Desktop (1024px+).
+ * =============================================================================
+ */
+
+/* --- Mobile Devices (Max-width 767px) --- */
+@media (max-width: 767px) {
+    body {
+        font-size: 0.9rem; /* Slightly smaller base font size */
     }
-    .profile-display {
-        flex-direction: column-reverse; /* Stack picture left, name right on smaller screens */
-        text-align: center;
-        padding: 25px;
-        gap: 15px;
+    .main-content-wrapper {
+        /* Ensure padding is consistent and doesn't cause overflow */
+        padding: var(--spacing-md) var(--spacing-sm); /* Adjusted padding on mobile */
+        gap: var(--spacing-lg); /* Maintain space between sections */
+        width: 100%; /* Ensure it takes full width */
+        min-width: 0; /* Allow it to shrink */
+        overflow-x: hidden; /* Hide horizontal overflow within the wrapper */
     }
-    .profile-info h1 {
-        font-size: 2.5rem;
+    .section-container {
+        padding: var(--spacing-md); /* Adjusted section padding */
+        margin-bottom: var(--spacing-lg); /* Adjusted section margin */
+        width: 100%; /* Ensure it takes full width */
+        min-width: 0; /* Allow it to shrink */
     }
-    .profile-info .tagline {
-        font-size: 1rem;
+    h1 { font-size: 2.2rem; }
+    h2 { font-size: 1.8rem; }
+    h3 { font-size: 1.4rem; }
+    p { font-size: 0.95rem; }
+
+    /* Hero Section adjustments */
+    .hero-section {
+        padding: var(--spacing-lg) 0; /* Adjusted vertical padding */
+        min-height: auto; /* Allow height to adjust dynamically */
     }
     .profile-image {
+        width: 120px; /* Smaller image on mobile */
         height: 120px;
-        width: 120px;
+        border-width: 3px; /* Thinner border */
+        margin-bottom: var(--spacing-sm);
     }
-    section h2, .form-page-container h1, .thank-you-container h1 {
-        font-size: 2rem;
+    .hero-title {
+        font-size: 2.5rem; /* Adjusted hero title size */
     }
-    section h2::after, .form-page-container h1::after, .thank-you-container h1::after {
-        width: 60px;
+    .hero-desc {
+        font-size: 1rem; /* Adjusted description font size */
     }
-    section pre {
-        font-size: 1.05em;
+    .hero-buttons {
+        flex-direction: column; /* Stack buttons vertically */
+        gap: var(--spacing-sm); /* Space between buttons */
     }
-    .skill-columns {
-        flex-direction: column;
-        align-items: center;
+    .hero-btn {
+        width: 100%; /* Full width buttons */
+        padding: 0.7rem 1.2rem; /* Adjusted padding */
+        font-size: 0.95rem; /* Adjusted font size */
     }
-    .skill-columns > div {
-        width: 90%;
-        max-width: 350px;
+
+    /* Skills Section adjustments */
+    .skill-boxes {
+        grid-template-columns: 1fr; /* Single column layout */
+        gap: var(--spacing-sm); /* Reduced gap */
     }
-    .connect-header {
-        flex-direction: column;
-        gap: 20px;
+    .skill-box {
+        padding: var(--spacing-md); /* Adjusted padding */
     }
-    .connect-header h3 {
-        font-size: 1.9rem;
+    .skill-box h4 {
+        font-size: 1.2rem; /* Adjusted font size */
     }
-    .contact-button {
-        padding: 12px 25px;
-        font-size: 1rem;
+    .skill-box li {
+        font-size: 0.85rem; /* Adjusted font size */
+        padding: 0.5rem 0.8rem; /* Adjusted padding */
     }
-    .form-page-container, .thank-you-container {
-        padding: 30px;
-        margin: 20px auto;
+
+    /* Projects Section adjustments */
+    .projects-grid {
+        grid-template-columns: 1fr; /* Single column layout */
+        gap: var(--spacing-md); /* Reduced gap */
     }
-    .thank-you-container h1 {
-        font-size: 2.8em;
+    .project-card {
+        margin-bottom: var(--spacing-md); /* Adjusted margin */
     }
-    .thank-you-container p {
-        font-size: 1.1em;
+    .project-card img {
+        height: 150px; /* Smaller image height */
+        margin-bottom: var(--spacing-sm);
+    }
+    .project-card h3 {
+        font-size: 1.5rem; /* Adjusted font size */
+        margin-bottom: 0.5rem;
+    }
+    .project-card p {
+        font-size: 0.9rem; /* Adjusted font size */
+        margin-bottom: var(--spacing-sm);
+    }
+    .project-tags {
+        gap: 0.3rem; /* Smaller gap for tags */
+    }
+    .tag {
+        font-size: 0.75rem; /* Smaller tag font size */
+        padding: 0.3rem 0.6rem; /* Smaller tag padding */
+    }
+    .project-buttons {
+        flex-direction: column; /* Stack buttons vertically */
+        gap: 0.8rem; /* Reduced gap */
+    }
+    .project-btn {
+        width: calc(100% - 2rem); /* Full width with padding consideration */
+        padding: 0.7rem 1.2rem; /* Adjusted padding */
+        font-size: 0.9rem; /* Adjusted font size */
+    }
+
+    /* Contact Section adjustments */
+    .contact-content {
+        flex-direction: column; /* Stack info and form vertically */
+        gap: var(--spacing-lg); /* Space between sections */
+    }
+    .contact-info, .contact-form-container {
+        width: 100%; /* Full width */
+        padding: var(--spacing-md); /* Adjusted padding */
+    }
+    .contact-info h3 {
+        font-size: 1.6rem; /* Adjusted font size */
+    }
+    .contact-info-item {
+        font-size: 0.95rem; /* Adjusted font size */
+    }
+    .social-links {
+        justify-content: center; /* Center social links */
+        gap: var(--spacing-sm); /* Reduced gap */
+    }
+    .social-link {
+        width: 40px; /* Smaller social link icons */
+        height: 40px;
+    }
+    .social-link img {
+        width: 20px;
+        height: 20px;
+    }
+
+    /* Let's Connect Button adjustment */
+    .lets-connect-wrapper {
+        margin: var(--spacing-lg) 0; /* Adjusted margin */
+    }
+    .connect-btn {
+        padding: 1rem 2rem; /* Adjusted padding */
+        font-size: 1.05rem; /* Adjusted font size */
+    }
+
+    /* Footer adjustments */
+    footer {
+        padding: var(--spacing-sm); /* Reduced padding */
+        gap: 0.8rem; /* Reduced gap */
+    }
+    .footer-links {
+        flex-direction: column; /* Stack links vertically */
+        gap: 0.5rem; /* Reduced gap */
+        margin-bottom: var(--spacing-sm);
+    }
+    .footer-links a {
+        padding: 0.3rem 0; /* Adjusted padding */
+        font-size: 0.9rem; /* Adjusted font size */
+    }
+    .footer-links .icon {
+        width: 18px; /* Smaller icons */
+        height: 18px;
+    }
+
+    /* --- Admin Panel Mobile Specifics --- */
+    .admin-main-header {
+        padding: 0.8rem var(--spacing-md); /* Consistent padding with main site header */
+    }
+    .admin-header-title {
+        font-size: 1.8rem; /* Smaller title for mobile header */
+    }
+    /* Menu icon is already block globally */
+    /* Dropdown menu is already handled globally for all sizes */
+
+    .dashboard-cards {
+        grid-template-columns: 1fr; /* Single column layout for cards */
+        gap: var(--spacing-sm); /* Reduced gap */
+    }
+    .dashboard-card {
+        padding: var(--spacing-md); /* Adjusted padding */
+    }
+    .dashboard-card h3 {
+        font-size: 1.3rem; /* Adjusted font size */
+    }
+    .card-metric {
+        font-size: 2.5rem; /* Adjusted font size */
+    }
+    .admin-actions {
+        flex-direction: column; /* Stack buttons vertically */
+        gap: 0.8rem; /* Reduced gap */
+    }
+    .admin-actions .action-btn {
+        width: 100%; /* Full width buttons */
+        padding: 0.7rem 1.2rem; /* Adjusted padding */
+        font-size: 0.95rem; /* Adjusted font size */
+    }
+
+    /* Admin Panel Form Submissions Table */
+    .form-submissions-actions {
+        flex-direction: column; /* Stack filters vertically */
+        align-items: flex-start; /* Align items to start */
+        gap: var(--spacing-sm); /* Reduced gap */
+        padding: var(--spacing-md); /* Adjusted padding */
+        width: 100%; /* Ensure it takes full width */
+    }
+    .filter-group, .custom-date-range {
+        width: 100%; /* Full width */
+        flex-direction: column; /* Stack elements vertically */
+        align-items: flex-start; /* Align items to start */
+        gap: 0.5rem; /* Reduced gap */
+    }
+    .styled-select, .styled-date-input, .form-submissions-actions .action-btn {
+        width: 100%; /* Make inputs and buttons full width */
+        padding: 0.7rem; /* Adjusted padding */
+        font-size: 0.9rem; /* Adjusted font size */
+    }
+    .messages-table-wrapper {
+        overflow-x: auto; /* Ensure horizontal scroll for table */
+        width: 100%; /* Ensure wrapper takes full width */
+        -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+    }
+    .messages-table {
+        min-width: 500px; /* Ensure table doesn't get too cramped, allowing scroll */
+        font-size: 0.9rem; /* Smaller table font size */
+    }
+    .messages-table th, .messages-table td {
+        padding: 0.8rem; /* Reduced table cell padding */
+    }
+    .messages-table .action-btn {
+        padding: 0.4rem 0.6rem; /* Smaller action buttons in table */
+        font-size: 0.8rem; /* Smaller font for table buttons */
+    }
+
+    /* Admin Settings adjustments */
+    .change-password-form-wrapper, .other-settings {
+        padding: var(--spacing-md); /* Adjusted padding */
+    }
+    .change-password-form {
+        gap: var(--spacing-sm); /* Reduced gap */
+    }
+    .change-password-form label {
+        font-size: 0.9rem; /* Adjusted font size */
+    }
+    .change-password-form input {
+        padding: 0.8rem; /* Adjusted padding */
+        font-size: 0.9rem; /* Adjusted font size */
+    }
+    .change-password-form .action-btn {
+        padding: 0.8rem 1.5rem; /* Adjusted padding */
+        font-size: 0.95rem; /* Adjusted font size */
+    }
+    .other-settings h3 {
+        font-size: 1.5rem; /* Adjusted font size */
+    }
+    .other-settings li {
+        font-size: 0.9rem; /* Adjusted font size */
     }
 }
 
-@media (max-width: 480px) {
-    header h1 {
-        font-size: 1.8rem;
+/* --- Tablet Devices (768px to 1023px) --- */
+@media (min-width: 768px) and (max-width: 1023px) {
+    .main-content-wrapper {
+        padding: var(--spacing-lg) var(--spacing-xl); /* Increased horizontal padding */
+    }
+    h1 { font-size: 3rem; }
+    h2 { font-size: 2.2rem; }
+    h3 { font-size: 1.6rem; }
+
+    /* Hero Section */
+    .hero-section {
+        flex-direction: row; /* Horizontal layout */
+        text-align: left;
+        gap: var(--spacing-xl); /* Increased gap */
+        padding: var(--spacing-xl) 0;
     }
     .profile-image {
-        height: 100px;
-        width: 100px;
+        width: 180px; /* Larger image */
+        height: 180px;
+        border-width: 4px;
     }
-    .profile-info h1 {
+    .hero-title {
+        font-size: 3.2rem;
+    }
+    .hero-desc {
+        font-size: 1.1rem;
+    }
+    .hero-buttons {
+        flex-direction: row; /* Horizontal buttons */
+        gap: var(--spacing-md);
+    }
+    .hero-btn {
+        width: auto; /* Auto width */
+        padding: 0.9rem 1.8rem;
+        font-size: 1.05rem;
+    }
+
+    /* Skills Grid */
+    .skill-boxes {
+        grid-template-columns: repeat(2, 1fr); /* Two columns */
+        gap: var(--spacing-md);
+    }
+    .skill-box {
+        padding: var(--spacing-lg);
+    }
+    .skill-box h4 {
+        font-size: 1.4rem;
+    }
+    .skill-box li {
+        font-size: 1rem;
+    }
+
+    /* Projects Grid */
+    .projects-grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* 2-3 columns */
+        gap: var(--spacing-lg);
+    }
+    .project-card img {
+        height: 180px; /* Slightly larger image height */
+    }
+
+    /* Contact Section */
+    .contact-content {
+        flex-direction: row; /* Horizontal layout */
+        gap: var(--spacing-xl);
+    }
+    .contact-info, .contact-form-container {
+        padding: var(--spacing-lg);
+    }
+    .social-link {
+        width: 45px;
+        height: 45px;
+    }
+    .social-link img {
+        width: 24px;
+        height: 24px;
+    }
+
+    /* Let's Connect Button */
+    .connect-btn {
+        padding: 1.1rem 2.5rem;
+        font-size: 1.1rem;
+    }
+
+    /* Footer */
+    footer {
+        padding: var(--spacing-lg) var(--spacing-xl);
+    }
+
+    /* --- Index.html Top Bar Tablet Specifics (now handled by global dropdown) --- */
+    .top-bar {
+        padding: 1rem var(--spacing-xl);
+    }
+    .top-bar .logo {
         font-size: 2rem;
     }
-    .profile-info .tagline {
+    /* Menu icon is already block globally */
+    /* Dropdown menu is already handled globally for all sizes */
+
+    /* --- Admin Panel Tablet Specifics --- */
+    .admin-main-header {
+        padding: 1rem var(--spacing-xl);
+    }
+    .admin-header-title {
+        font-size: 2rem;
+    }
+    /* Menu icon is already block globally */
+    /* Dropdown menu is already handled globally for all sizes */
+
+    .dashboard-cards {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Adjust for tablet */
+        gap: var(--spacing-md);
+    }
+
+    /* Admin Panel Form Submissions Table */
+    .form-submissions-actions {
+        padding: var(--spacing-md);
+        gap: var(--spacing-sm);
+    }
+    .custom-date-range {
+        gap: 0.8rem;
+    }
+    .messages-table {
+        min-width: 650px; /* Ensure table is readable */
+        font-size: 1rem;
+    }
+    .messages-table th, .messages-table td {
+        padding: 1rem;
+    }
+    .messages-table .action-btn {
+        padding: 0.6rem 1rem;
         font-size: 0.9rem;
     }
-    section h2, .form-page-container h1, .thank-you-container h1 {
+}
+
+/* --- Desktop Devices (1024px and up) --- */
+@media (min-width: 1024px) {
+    .main-content-wrapper {
+        padding: var(--spacing-xl) var(--spacing-xxl); /* Generous padding */
+    }
+    h1 { font-size: 3.5rem; }
+    h2 { font-size: 2.8rem; }
+    h3 { font-size: 2rem; }
+
+    /* Hero Section */
+    .hero-section {
+        padding: var(--spacing-xxl) 0;
+        gap: var(--spacing-xl);
+    }
+    .profile-image {
+        width: 250px;
+        height: 250px;
+        border-width: 5px;
+    }
+    .hero-title {
+        font-size: 3.8rem;
+    }
+    .hero-desc {
+        font-size: 1.3rem;
+    }
+    .hero-buttons {
+        flex-direction: row;
+        gap: var(--spacing-md);
+    }
+    .hero-btn {
+        padding: 1rem 2.5rem;
+        font-size: 1.1rem;
+    }
+
+    /* Skills Grid */
+    .skill-boxes {
+        grid-template-columns: repeat(3, 1fr); /* Three columns */
+        gap: var(--spacing-lg);
+    }
+    .skill-box {
+        padding: var(--spacing-xl);
+    }
+    .skill-box h4 {
         font-size: 1.6rem;
     }
-    .footer-skills h3, .connect-header h3 {
-        font-size: 1.5rem;
+    .skill-box li {
+        font-size: 1.05rem;
     }
-    .skill-columns strong {
-        font-size: 1em;
+
+    /* Projects Grid */
+    .projects-grid {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* 3-4 columns */
+        gap: var(--spacing-xl);
     }
-    button[type="submit"], .contact-button, .thank-you-container a {
-        font-size: 0.95rem;
-        padding: 10px 18px;
+    .project-card img {
+        height: 200px;
     }
-    .thank-you-container h1 {
-        font-size: 2em;
+
+    /* Contact Section */
+    .contact-content {
+        gap: var(--spacing-xxl);
     }
->>>>>>> 104ea33c8ae522c77728e8d321002121c29a28de
+    .contact-info, .contact-form-container {
+        padding: var(--spacing-xl);
+    }
+
+    /* Let's Connect Button */
+    .connect-btn {
+        padding: 1.2rem 3rem;
+        font-size: 1.2rem;
+    }
+
+    /* Footer */
+    footer {
+        padding: var(--spacing-xl) var(--spacing-xxl);
+    }
+
+    /* --- Index.html Top Bar Desktop Specifics (now handled by global dropdown) --- */
+    .top-bar {
+        padding: 1rem 8%;
+    }
+    .top-bar .logo {
+        font-size: 2.2rem;
+    }
+    /* Menu icon is already block globally */
+    /* Dropdown menu is already handled globally for all sizes */
+
+    /* --- Admin Panel Desktop Specifics --- */
+    .admin-main-header {
+        padding: 1rem 8%; /* Consistent padding with main site header */
+    }
+    .admin-header-title {
+        font-size: 2.5rem;
+    }
+    /* Menu icon is already block globally */
+    /* Dropdown menu is already handled globally for all sizes */
+
+    .dashboard-cards {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
+
+    /* Admin Panel Form Submissions Table */
+    .form-submissions-actions {
+        padding: var(--spacing-lg);
+        gap: var(--spacing-md);
+    }
+    .messages-table {
+        min-width: 700px;
+    }
+    .messages-table th, .messages-table td {
+        padding: 1rem;
+    }
+    .messages-table .action-btn {
+        padding: 0.6rem 1rem;
+        font-size: 0.9rem;
+    }
 }
